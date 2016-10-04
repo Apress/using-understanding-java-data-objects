@@ -1,0 +1,1 @@
+The compiled files are placed in the build directory

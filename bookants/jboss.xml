@@ -1,0 +1,167 @@
+<!--
+Copyright (c) 2002 Yankee Software.
+
+This file is part of the JDO Learning Tools
+
+The JDO Learning Tools is free software; you can use it, redistribute it,
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
+
+The JDO Learning Tools software is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied
+warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See
+the GNU General Public License for more details.
+
+A copy of the GPL Version 2 is contained in LICENSE.TXT in this source
+distribution.  If you cannot find LICENSE.TXT, write to the Free
+Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+02111-1307 USA or visit www.fsf.org on the web.
+
+Copyright law and the license agreement do not apply to your
+understanding of the the concepts, principles, and practices embedded
+in this code.  The purpose of the JDO Learning Tools to to help
+advance the use and understanding of Java Data Objects, the standard
+for transparent persistence for Java objects from the Java Community
+Process.
+
+Change History:
+
+Please insert a brief record of any changes made.
+
+Author            Date        Purpose
+=================+==========+===================================
+David Ezzio       09/01/02   Created
+-->
+
+<!-- This build is specific to the JDOSS 3.0 EJB container -->
+<project name="JDO Book Examples Ant Script: subscripts specific to JBoss" default="Help" basedir=".">
+
+   <target name="Help" >
+      <echo message="This build script is not called directly.  The main script is build.xml" />
+   </target>
+
+   <!-- class path for JBoss 3 -->
+   <path id="JBoss3-client-path-id">
+      <pathelement location="${jboss.home}/client/jaas.jar"/>
+      <pathelement location="${jboss.home}/client/jbossall-client.jar"/>
+      <pathelement location="${jboss.home}/client/jnet.jar"/>
+      <pathelement location="${jboss.home}/client/log4j.jar"/>
+      <pathelement location="${jboss.home}/client/jacorb.jar"/>
+      <pathelement location="${jboss.home}/client/jboss-jsr77.jar"/>
+   <!--
+      <pathelement location="${jboss.home}/client/jcert.jar"/>
+      <pathelement location="${jboss.home}/client/gnu-regexp.jar"/>
+      <pathelement location="${jboss.home}/client/jbossmq-client.jar"/>
+      <pathelement location="${jboss.home}/client/jbossmqha.jar"/>
+      <pathelement location="${jboss.home}/client/jmx-connector-client-factory.jar"/>
+      <pathelement location="${jboss.home}/client/jmx-ejb-connector-client.jar"/>
+      <pathelement location="${jboss.home}/client/jmx-rmi-connector-client.jar"/>
+      <pathelement location="${jboss.home}/client/jsse.jar"/>
+
+      These are part of jbossall-client.jar
+      <pathelement location="${jboss.home}/client/jbosssx-client.jar"/>
+      <pathelement location="${jboss.home}/client/jboss-client.jar"/>
+      <pathelement location="${jboss.home}/client/jboss-net-client.jar"/>
+      <pathelement location="${jboss.home}/client/jboss-system-client.jar"/>
+      <pathelement location="${jboss.home}/client/jboss-common-client.jar"/>
+      <pathelement location="${jboss.home}/client/jboss-iiop-client.jar"/>
+      <pathelement location="${jboss.home}/client/jbossha-client.jar"/>
+      <pathelement location="${jboss.home}/client/jboss-j2ee.jar"/>
+      <pathelement location="${jboss.home}/client/jnp-client.jar"/>
+      <pathelement location="${jboss.home}/client/concurrent.jar"/>
+
+   -->
+   </path>
+
+   <target name="find-JBoss" >
+      <echo message="checking: ${jboss.home}/client/jboss-client.jar" />
+      <available property="found.JBoss" file="${jboss.home}/client/jboss-client.jar" />
+   </target>
+
+   <target name="die-without-JBoss" depends="find-JBoss" unless="found.JBoss" >
+      <echo message="JBoss is not installed or default.properties is not configured" />
+      <echo message="   Check jboss.home:  current: ${jboss.home}" />
+      <fail/>
+   </target>
+
+   <target name="determine" depends="die-without-JBoss" >
+      <available property="jboss-client-classpath-id" value="JBoss3-client-path-id"
+            file="${jboss.home}/client/jboss-j2ee.jar" />
+
+      <property name="jboss.client.classpath" refid="${jboss-client-classpath-id}"   />
+
+      <property name="run-ejb-client.classpath"
+            value="${jboss.client.classpath};${jdo.jar};" />
+   </target>
+
+   <target name="tell-configuration" depends="determine" >
+      <echo message="jboss.home: ${jboss.home}" />
+      <echo message="run-ejb-client.classpath is ${run-ejb-client.classpath}" />
+   </target>
+
+   <target name="sayings-ejb" depends="tell-configuration" >
+      <echo message="calling ${book.path}/sayings/build.xml" />
+      <ant antfile="${book.path}/sayings/build.xml" target="sayings-ejb" />
+      <echo message="returned from ${book.path}/sayings/build.xml" />
+
+      <!-- deploy the EJB jar to JBoss -->
+      <copy file="serverjars/quoteserver.jar"
+            todir="${jboss.home}/server/default/deploy" />
+
+      <echo message="creating runQuoteServer.bat" />
+      <!-- the echoed text preserves leading whitespace -->
+      <echo file="runQuoteServer.bat" >
+REM Build generated macro to run the QuoteServer example
+REM
+java -cp clientjars/quoteserverclient.jar;${run-ejb-client.classpath}; com.ysoft.jdo.book.sayings.client.QuoteServerClient %1 %2 %3 %4 %5 %6
+      </echo>
+
+      <!-- the echoed text preserves leading whitespace -->
+      <echo file="debugQuoteServer.bat" >
+REM Build generated macro to run the sayings example
+REM
+java -cp clientjars/quoteserverclient.jar;${run-ejb-client.classpath};${jdo.home}/lib/kodo-jdoee-runtime.jar; com.ysoft.jdo.book.sayings.client.QuoteServerClient %1 %2 %3 %4 %5 %6
+      </echo>
+   </target>
+
+   <target name="rental-ejb" depends="tell-configuration" >
+      <echo message="calling ${book.path}/rental/ejb/build.xml" />
+      <ant antfile="${book.path}/rental/ejb/build.xml" target="rental-ejb" />
+      <echo message="returned from ${book.path}/rental/ejb/build.xml" />
+
+      <!-- deploy the server EJB jar to JBoss -->
+      <copy file="serverjars/reservationservice.jar"
+            todir="${jboss.home}/server/default/deploy" />
+   </target>
+
+   <target name="rental-ejb-copy-files" depends="tell-configuration" >
+      <copy todir="temp" >
+         <fileset dir="${jboss.home}/client" >
+            <patternset >
+               <include name="jaas.jar"/>
+               <include name="jbossall-client.jar"/>
+               <include name="log4j.jar"/>
+               <include name="jacorb.jar"/>
+               <include name="jboss-jsr77.jar"/>
+               <include name="jnet.jar"/>
+            <!-- all part of jbossall-client.jar
+               <include name="jnp-client.jar"/>
+               <include name="concurrent.jar"/>
+               <include name="jboss-j2ee.jar"/>
+               <include name="jboss-client.jar"/>
+               <include name="jboss-net-client.jar"/>
+               <include name="jboss-system-client.jar"/>
+               <include name="jboss-common-client.jar"/>
+               <include name="jboss-iiop-client.jar"/>
+               <include name="jbossha-client.jar"/>
+               <include name="jbosssx-client.jar"/>
+            -->
+            </patternset>
+         </fileset>
+      </copy>
+   </target>
+
+
+</project>
+

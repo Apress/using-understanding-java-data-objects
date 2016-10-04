@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE node SYSTEM "storage.dtd">
+<node name="ibo-config">
+   <entry key="version" value="1.0" />
+
+   <node name="classes-pc">
+      <entry key="fail" value="warning"/>
+      <node name="com.ysoft.jdo.book.rental.persistent.Rental"/>
+      <node name="com.ysoft.jdo.book.rental.persistent.Lighthouse"/>
+      <node name="com.ysoft.jdo.book.rental.persistent.Customer"/>
+      <node name="com.ysoft.jdo.book.rental.persistent.Week"/>
+   </node>
+
+   <node name="environment">
+      <entry key="optimistic" value="true" />
+      <entry key="logging" value="true" />
+      <entry key="non-transactional-read" value="true" />
+      <entry key="non-transactional-write" value="false" />
+      <entry key="retain-values" value="false" />
+      <entry key="restore-values" value="false" />
+
+   </node>
+
+   <!-- this is an example for native connection managed, usually used by JCA -->
+   <node name="resource-entry">
+      <entry key="type" value="jdbc" />
+      <entry key="name" value="SJDO_DEFAULT" />
+      <entry key="driver-name" value="oracle.jdbc.driver.OracleDriver" />
+      <entry key="url" value="jdbc:oracle:thin:@ysoftlaptop:1521:OAK" />
+      <entry key="username" value="intellibo" />
+      <entry key="password" value="intellibo" />
+      <entry key="dbsupport-name" value="com.signsoft.ibo.dbsupport.oracle81x.OracleDatabaseInfo" />
+      <entry key="transactional" value="true" />
+      <node name="pool-configuration">
+        <entry key="shrink-time-lag" value="0"/>
+        <entry key="initial-wait-time" value="0"/>
+        <entry key="shrink-size" value="1"/>
+        <entry key="increase-size" value="1"/>
+        <entry key="maximum-size" value="1"/>
+        <entry key="initial-size" value="1"/>
+      </node>
+   </node>
+
+</node>
+

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jdo PUBLIC "-//Sun Microsystems, Inc.//DTD Java Data Objects Metadata 1.0//EN"
+         "http://java.sun.com/dtd/jdo_1_0.dtd">
+<jdo>
+   <package name="com.ysoft.jdo.book.library">
+      <class identity-type="datastore" name="Book">
+         <field name="title" persistence-modifier="persistent">
+            <extension key="jdbc" vendor-name="ssibo"/>
+         </field>
+         <field name="checkout" persistence-modifier="persistent"/>
+         <field name="oidString" persistence-modifier="none"/>
+         <field name="categories" persistence-modifier="persistent">
+            <collection element-type="com.ysoft.jdo.book.library.Category"/>
+            <extension key="jdbc" vendor-name="ssibo">
+               <extension key="mapping" value="many-to-many" vendor-name="ssibo"/>
+            </extension>
+         </field>
+         <field name="borrower" persistence-modifier="persistent">
+            <extension key="jdbc" vendor-name="ssibo">
+               <extension key="mapping" value="one-to-one" vendor-name="ssibo"/>
+            </extension>
+         </field>
+         <extension key="jdbc" vendor-name="ssibo">
+            <extension key="optimistic-lock" vendor-name="ssibo">
+               <extension key="provider" value="default" vendor-name="ssibo"/>
+            </extension>
+         </extension>
+      </class>
+      <class identity-type="datastore" name="Category">
+         <field name="oidString" persistence-modifier="none"/>
+         <field name="name" persistence-modifier="persistent"/>
+         <field name="books" persistence-modifier="persistent">
+            <collection element-type="com.ysoft.jdo.book.library.Book"/>
+            <extension key="jdbc" vendor-name="ssibo">
+               <extension key="mapping" value="many-to-many" vendor-name="ssibo"/>
+            </extension>
+         </field>
+         <extension key="jdbc" vendor-name="ssibo">
+            <extension key="optimistic-lock" vendor-name="ssibo">
+               <extension key="provider" value="default" vendor-name="ssibo"/>
+            </extension>
+         </extension>
+      </class>
+      <class identity-type="datastore" name="Borrower">
+         <field name="volunteer" persistence-modifier="persistent">
+            <extension key="jdbc" vendor-name="ssibo">
+               <extension key="mapping" value="one-to-one" vendor-name="ssibo"/>
+            </extension>
+         </field>
+         <field name="oidString" persistence-modifier="none"/>
+         <field name="name" persistence-modifier="persistent"/>
+         <field name="books" persistence-modifier="persistent">
+            <collection element-type="com.ysoft.jdo.book.library.Book"/>
+            <extension key="jdbc" vendor-name="ssibo">
+               <extension key="mapping" value="one-to-many" vendor-name="ssibo"/>
+            </extension>
+         </field>
+         <extension key="jdbc" vendor-name="ssibo">
+            <extension key="optimistic-lock" vendor-name="ssibo">
+               <extension key="provider" value="default" vendor-name="ssibo"/>
+            </extension>
+         </extension>
+      </class>
+      <class name="Volunteer">
+         <field name="oidString" persistence-modifier="none"/>
+         <field name="hours_per_week" persistence-modifier="persistent"/>
+         <field name="borrower" persistence-modifier="persistent">
+            <extension key="jdbc" vendor-name="ssibo">
+               <extension key="mapping" value="one-to-one" vendor-name="ssibo"/>
+            </extension>
+         </field>
+         <extension key="jdbc" vendor-name="ssibo">
+            <extension key="optimistic-lock" vendor-name="ssibo">
+               <extension key="provider" value="default" vendor-name="ssibo"/>
+            </extension>
+         </extension>
+      </class>
+   </package>
+</jdo>

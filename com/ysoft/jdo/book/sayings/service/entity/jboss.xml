@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<jboss>
+   <container-configurations>
+      <container-configuration>
+         <container-name>Standard BMP EntityBean</container-name>
+         <commit-option>A</commit-option>
+      </container-configuration>
+   </container-configurations>
+</jboss>
+

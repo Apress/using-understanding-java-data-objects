@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<service>
+
+   <mbean code="org.jboss.resource.connectionmanager.LocalTxConnectionManager" name="jboss.jca:service=LocalTxCM,name=serverIboDS">
+
+      <depends optional-attribute-name="ManagedConnectionFactoryName">
+         <mbean code="org.jboss.resource.connectionmanager.RARDeployment" name="jboss.jca:service=LocalTxDS,name=serverIboDS">
+            <depends optional-attribute-name="OldRarDeployment">jboss.jca:service=RARDeployment,name=JBoss LocalTransaction JDBC Wrapper</depends>
+            <depends optional-attribute-name="OldRarDeployment">jboss.jca:service=RARDeployment,name=Signsoft_intelliBO_JDO_Persistence_Provider</depends>
+            <attribute name="JndiName">jdoCF</attribute>
+         </mbean>
+      </depends>
+
+      <depends optional-attribute-name="ManagedConnectionPool">
+         <mbean code="org.jboss.resource.connectionmanager.JBossManagedConnectionPool" name="jboss.jca:service=LocalTxPool,name=serverIboDS">
+            <attribute name="MinSize">0</attribute>
+            <attribute name="MaxSize">20</attribute>
+            <attribute name="BlockingTimeoutMillis">5000</attribute>
+            <attribute name="IdleTimeoutMinutes">15</attribute>
+            <attribute name="Criteria">ByContainer</attribute>
+         </mbean>
+      </depends>
+
+      <depends optional-attribute-name="CachedConnectionManager">jboss.jca:service=CachedConnectionManager</depends>
+         <attribute name="TransactionManager">java:/TransactionManager</attribute>
+      <depends>jboss.jca:service=RARDeployer</depends>
+
+   </mbean>
+
+</service>

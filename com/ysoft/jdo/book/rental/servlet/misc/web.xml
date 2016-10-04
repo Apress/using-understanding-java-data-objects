@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE web-app
+   PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+   "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+
+   <display-name>The Maine Lighthouse Rental</display-name>
+   <description>
+      This is a sample web app supplied with the book
+      Using and Understanding Java Data Objects published
+      by Apress, Berkeley California.
+   </description>
+
+   <!-- name the servlet and then map a URI pattern to it -->
+   <servlet>
+      <servlet-name>Controller</servlet-name>
+      <servlet-class>com.ysoft.jdo.book.rental.servlet.{ANT-VAR}.ReservationServlet</servlet-class>
+   </servlet>
+
+   <servlet-mapping>
+      <servlet-name>Controller</servlet-name>
+      <url-pattern>/controller/*</url-pattern>
+   </servlet-mapping>
+
+   <!--
+      Define the default session timeout for your application,
+      in minutes.  From a servlet or JSP page, you can modify
+      the timeout for a particular session dynamically by using
+      HttpSession.setMaxInactiveInterval().
+   -->
+   <session-config>
+      <session-timeout>5</session-timeout>    <!-- 5 minutes -->
+   </session-config>
+
+   <!-- tag lib URI mappings -->
+   <taglib>
+      <taglib-uri>http://java.sun.com/jstl/core</taglib-uri>
+      <taglib-location>/WEB-INF/c.tld</taglib-location>
+   </taglib>
+
+</web-app>

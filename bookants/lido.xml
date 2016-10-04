@@ -1,0 +1,593 @@
+<!--
+Information on the file from CVS
+
+$Date: 2003/07/08 15:19:35 $
+$Revision: 1.5 $
+
+Copyright (c) 2002 Yankee Software.
+
+This file is part of the JDO Learning Tools
+
+The JDO Learning Tools is free software; you can use it, redistribute it,
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
+
+The JDO Learning Tools software is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied
+warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See
+the GNU General Public License for more details.
+
+A copy of the GPL Version 2 is contained in LICENSE.TXT in this source
+distribution.  If you cannot find LICENSE.TXT, write to the Free
+Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+02111-1307 USA or visit www.fsf.org on the web.
+
+Copyright law and the license agreement do not apply to your
+understanding of the the concepts, principles, and practices embedded
+in this code.  The purpose of the JDO Learning Tools to to help
+advance the use and understanding of Java Data Objects, the standard
+for transparent persistence for Java objects from the Java Community
+Process.
+
+Change History:
+
+Please insert a brief record of any changes made.
+
+Author            Date        Purpose
+=================+==========+===================================
+David Ezzio       09/01/02   Created
+-->
+
+<!-- This build is specific to the Lido JDO Implementation from Libelis -->
+<project name="JDO Book Examples Ant Script: subscripts specific to Libelis Lido" default="Help" basedir=".">
+
+   <property name="enhancer.tool" value="com.libelis.lido.Enhance" />
+   <property name="enhancer.jar" value="${jdo.home}/lib/lido-dev.jar"      />
+   <property name="schema.tool" value="com.libelis.lido.ds.jdbc.DefineSchema" />
+   <property name="schema.tool.args"
+         value="-driver oracle.jdbc.driver.OracleDriver -database jdbc:oracle:thin:@ysoftlaptop:1521:OAK -user lido -password lido -verbose" />
+
+   <!-- class path for lido -->
+   <path id="jdoLIDO-path-id">
+      <pathelement location="${jdbc.jar}"                               />
+      <pathelement location="${jdo.home}/bin"                           />
+      <pathelement location="${jdo.home}/lib/connector_1_0_0.jar"       />
+      <pathelement location="${jdo.home}/lib/jaas_1_0_0.jar"            />
+      <pathelement location="${jdo.home}/lib/jdbc_2_0-stdext.jar"       />
+      <pathelement location="${jdo.home}/lib/jta_1_0_1.jar"             />
+      <pathelement location="${jdo.home}/lib/servlet.jar"               />
+      <pathelement location="${jdo.home}/lib/jdo_1_0_0.jar"             />
+      <pathelement location="${jdo.home}/lib/lido-rt.jar"               />
+      <pathelement location="${jdo.home}/lib/lido-api.jar"              />
+      <pathelement location="${jdo.home}/lib/lido-rdb.jar"              />
+      <pathelement location="${jdo.home}/lib/lido-jca.jar"              />
+      <pathelement location="${jdo.home}/lib/lido-fdb.jar"              />
+      <pathelement location="${j2ee.home}/lib/j2ee.jar"                 />
+   </path>
+
+   <target name="Help" >
+      <echo message="This build script is not called directly.  The main script is build.xml" />
+   </target>
+
+   <target name="determine" >
+      <available property="jdo-classpath-id" value="jdoLIDO-path-id" file="${jdo.home}/lib/lido-rt.jar" />
+      <available property="factory.adaptor" value="JDOLidoAdaptor"   file="${jdo.home}/lib/lido-rt.jar" />
+
+      <property name="jdo.classpath"      refid="${jdo-classpath-id}"   />
+      <property name="compile.classpath"  value="${build.dir};${source.dir};${jdo.classpath};" />
+      <property name="enhance.classpath"  value="${build.dir};${jdo.classpath};${enhancer.jar};" />
+      <property name="run.classpath"      value="${enhanced.dir};${build.dir};${jdo.classpath};" />
+      <property name="jdo.jar"            value="${jdo.home}/lib/jdo_1_0_0.jar" />
+   </target>
+
+   <target name="check" depends="determine" >
+      <condition property="ready2" >
+         <and>
+            <available file="${jdbc.jar}" />
+            <not><or>
+               <equals arg1="${jdo-classpath-id}" arg2="$${jdo-classpath-id}" />
+               <equals arg1="${enhancer.tool}" arg2="$${enhancer.tool}" />
+            </or></not>
+            <or>
+               <equals arg1="${jdo-classpath-id}" arg2="jdoLIDO-path-id" />
+            </or>
+            <available file="${jdo.home}/lib/jdbc_2_0-stdext.jar" />
+            <available file="${jdo.home}/lib/lido-rt.jar"         />
+            <available file="${enhancer.jar}"                     />
+            <available file="${jdo.home}/lib/lido-rdb.jar"        />
+            <available file="${jdo.home}/lib/lido-jca.jar"        />
+         </and>
+      </condition>
+   </target>
+
+   <target name="verify" depends="check" unless="ready2" >
+      <echo message="Some property is not set properly, or Lido install was not found or has changed" />
+      <echo message="Check: ${jdo.home}/lib/jdbc_2_0-stdext.jar"        />
+      <echo message="       ${jdo.home}/lib/lido-rt.jar"                />
+      <echo message="       ${enhancer.jar}"                            />
+      <echo message="       ${jdo.home}/lib/lido-rdb.jar"               />
+      <echo message="       ${jdo.home}/lib/lido-jca.jar"               />
+      <echo message="Check JDBC_JAR:  current: ${jdbc.jar}"             />
+      <echo message="compile.classpath is ${compile.classpath}"         />
+      <echo message="enhance.classpath is ${enhance.classpath}"         />
+      <echo message="run.classpath is ${run.classpath}"                 />
+      <echo message="selected jdbc.jar: ${jdbc.jar}"                    />
+
+      <fail message="You need to tweak lido.properties, Lido install, or build" />
+   </target>
+
+   <target name="common" depends="verify" >
+      <echo message="calling ${book.path}/common/build.xml" />
+      <ant antfile="${book.path}/common/build.xml" />
+   </target>
+
+   <target name="testjdohelper" depends="verify,common" >
+      <javac
+         srcdir="${source.dir}"
+         destdir="${build.dir}"
+         debug="on"
+         deprecation="on"
+         optimize="off"
+      >
+         <classpath path="${compile.classpath}" />
+         <include name="${book.path}/factory/TestJDOHelper.java" />
+      </javac>
+
+      <antcall target="lido-enhance" >
+         <param name="package" value="factory" />
+         <param name="subpackage" value="lido" />
+         <param name="jdoname"      value="lido" />
+      </antcall>
+      <echo message="returned from lido-enhance" />
+      
+      <echo message="creating runTestJDOHelper.bat" />
+      <echo file="runTestJDOHelper.bat" >
+REM Build generated macro to run the TestJDOHelper example
+java -cp .;${run.classpath} -Djdo.metadata=${book.path}/factory/lido/lido.jdo com.ysoft.jdo.book.factory.TestJDOHelper com/ysoft/jdo/book/factory/lido/lido.properties
+      </echo>
+
+      <echo message="Running TestJDOHelper" />
+      <echo message="run.classpath=${run.classpath}" />
+      <java classname="com.ysoft.jdo.book.factory.TestJDOHelper"
+            classpath=".;${run.classpath}" fork="yes" failonerror="yes" >
+         <arg line="com/ysoft/jdo/book/factory/lido/lido.properties" />
+         <jvmarg value="-Djdo.metadata=${book.path}/factory/lido/lido.jdo" />
+      </java>
+
+      <echo message="created runTestJDOHelper.bat" />
+   </target>
+
+   <target name="build-factory" depends="verify,common" >
+      <echo message="calling ${book.path}/factory/lido/build.xml" />
+      <ant antfile="${book.path}/factory/lido/build.xml" />
+      <echo message="returned from ${book.path}/factory/lido/build.xml" />
+   </target>
+
+   <target name="testfactory" depends="build-factory,verify,common" >
+   
+      <antcall target="lido-enhance" >
+         <param name="package" value="factory" />
+         <param name="subpackage" value="lido" />
+         <param name="jdoname"      value="lido" />
+      </antcall>
+      <echo message="returned from lido-enhance" />
+      
+      <echo message="creating runTestFactory.bat" />
+      <echo file="runTestFactory.bat" >
+REM Build generated macro to run the factory example
+java -cp ${run.classpath} -Djdo.metadata=${book.path}/factory/lido.jdo com.ysoft.jdo.book.factory.client.TestFactory com.ysoft.jdo.book.factory.lido.${factory.adaptor} %1 %2 %3 %4 %5 %6 %7 %8 %9
+      </echo>
+
+      <copy file="${book.path}/factory/lido/lido.jdo"
+            todir="${build.dir}/${book.path}/factory"/>
+      <echo message="running TestFactory" />
+      <echo message="run.classpath=${run.classpath}" />
+      <java classname="com.ysoft.jdo.book.factory.client.TestFactory"
+            classpath="${run.classpath}" fork="yes" failonerror="yes" >
+         <jvmarg value="-Djdo.metadata=${book.path}/factory/lido.jdo" />
+         <arg value="com.ysoft.jdo.book.factory.lido.${factory.adaptor}" />
+      </java>
+
+      <echo message="created runTestFactory.bat" />
+   </target>
+
+   <target name="megacups" depends="verify,common" >
+      <echo message="calling ${book.path}/coffee/build.xml" />
+      <ant antfile="${book.path}/coffee/build.xml" />
+      <echo message="returned from ${book.path}/coffee/build.xml" />
+
+      <antcall target="lido-enhance" >
+         <param name="package" value="coffee" />
+      </antcall>
+      <echo message="returned from lido-enhance" />
+
+      <copy file="${book.path}/coffee/lido.properties"
+            tofile="${build.dir}/${book.path}/coffee/factory.properties"/>
+
+      <echo message="creating runMegaCups.bat" />
+      <echo file="runMegaCups.bat" >
+REM Build generated macro to run the MegaCups example
+java -Djdo.metadata=${enhanced.dir}/${book.path}/coffee.jdo -cp ${run.classpath} com.ysoft.jdo.book.coffee.MegaCups %1 %2 %3 %4 %5 %6 %7 %8 %9
+      </echo>
+   </target>
+
+   <target name="library" depends="verify,common" >
+      <echo message="calling ${book.path}/library/build.xml" />
+      <ant antfile="${book.path}/library/build.xml" />
+      <echo message="returned from ${book.path}/library/build.xml" />
+
+      <antcall target="lido-enhance" >
+         <param name="package" value="library" />
+      </antcall>
+      <echo message="returned from lido-enhance" />
+
+      <copy file="${book.path}/library/lido/lido.properties"
+            tofile="${build.dir}/${book.path}/library/factory.properties"/>
+
+      <echo message="creating runLibrary.bat" />
+      <echo file="runLibrary.bat" >
+REM Build generated macro to run the library example
+java -Djdo.metadata=${enhanced.dir}/${book.path}/library.jdo -cp ${run.classpath} com.ysoft.jdo.book.library.client.Library
+      </echo>
+   </target>
+
+   <target name="statetracker" depends="build-factory,verify,common" >
+      <echo message="calling ${book.path}/statetracker/build.xml" />
+      <ant antfile="${book.path}/statetracker/build.xml" />
+      <echo message="returned from ${book.path}/statetracker/build.xml" />
+
+      <antcall target="lido-enhance" >
+         <param name="package" value="statetracker" />
+      </antcall>
+      <echo message="returned from lido-enhance" />
+
+      <echo message="creating runStatetracker.bat" />
+      <echo file="runStatetracker.bat" >
+REM Build generated macro to run the statetracker example
+java -Djdo.metadata=${enhanced.dir}/${book.path}/statetracker.jdo -cp ${run.classpath} com.ysoft.jdo.book.statetracker.client.StateTracker com.ysoft.jdo.book.factory.lido.JDOLidoAdaptor
+      </echo>
+   </target>
+
+   <target name="rental-gui" depends="verify,common" >
+      <echo message="calling ${book.path}/rental/local/build.xml" />
+      <ant antfile="${book.path}/rental/local/build.xml" />
+      <echo message="returned from ${book.path}/rental/local/build.xml" />
+      <copy file="${book.path}/rental/local/lido.properties"
+            tofile="${build.dir}/${book.path}/rental/persistent/factory.properties"/>
+
+      <antcall target="lido-enhance" >
+         <param name="superpackage" value="rental" />
+         <param name="package"      value="persistent" />
+         <param name="subpackage"   value="local" />
+         <param name="jdoname"      value="persistent" />
+      </antcall>
+      <echo message="returned from lido-enhance" />
+
+      <echo message="creating runRentalConsole.bat" />
+      <echo file="runRentalConsole.bat" >
+REM Build generated macro to run the RentalConsole example
+java -Djdo.metadata=${enhanced.dir}/${book.path}/rental/persistent.jdo -cp ${run.classpath} com.ysoft.jdo.book.rental.local.client.console.ReservationClient
+      </echo>
+
+      <echo message="creating runRentalGui.bat" />
+      <echo file="runRentalGui.bat" >
+REM Build generated macro to run the RentalGui example
+java -Djdo.metadata=${enhanced.dir}/${book.path}/rental/persistent.jdo -cp ${run.classpath} com.ysoft.jdo.book.rental.local.client.gui.ReservationClient %1 %2
+      </echo>
+   </target>
+
+   <target name="sayings-stateless-cmt" depends="verify,common" >
+      <property name="ejb.subpackage" value="stateless_cmt" />
+      <antcall target="sayings" />
+   </target>
+
+   <target name="sayings-stateless-bmt" depends="verify,common" >
+      <property name="ejb.subpackage" value="stateless_bmt" />
+      <!-- define this early as its location is different for this build -->
+      <property name="factory-properties"
+            value="${book.path}/sayings/service/session/stateless_bmt/lido.properties" />
+      <antcall target="sayings" />
+   </target>
+
+   <target name="sayings-stateful-cmt" depends="verify,common" >
+      <property name="ejb.subpackage" value="stateful_cmt" />
+      <antcall target="sayings" />
+   </target>
+
+   <target name="sayings-stateful-bmt" depends="verify,common" >
+      <property name="ejb.subpackage" value="stateful_bmt" />
+      <!-- define this early as its location is different for this build -->
+      <property name="factory-properties"
+            value="${book.path}/sayings/service/session/stateful_bmt/lido.properties" />
+      <antcall target="sayings" />
+   </target>
+
+   <target name="sayings-entity" depends="verify,common" >
+      <property name="ejb.subpackage" value="." />
+      <antcall target="sayings" />
+   </target>
+
+   <target name="sayings" >
+      <echo message="calling ${book.path}/sayings/build.xml" />
+      <ant antfile="${book.path}/sayings/build.xml" target="sayings" />
+      <echo message="returned from ${book.path}/sayings/build.xml" />
+
+      <!-- this property must be defined for sayings/build.xml -->
+      <property name="factory-properties" value="${book.path}/sayings/persistent/lido/lido.properties" />
+
+      <antcall target="lido-enhance" >
+         <param name="package" value="sayings/persistent" />
+         <param name="jdoname" value="persistent" />
+         <!-- set this early because it cannot accept the default value in ${package} -->
+         <param name="sql.file" value="sayings.sql" />
+      </antcall>
+      <echo message="returned from lido-enhance" />
+
+      <!-- build jar to hold extra Lido files -->
+      <jar jarfile="serverjars/lidoExtra.jar" update="yes" >
+         <fileset dir="${jdo.home}/bin" >
+            <patternset >
+               <include name="libelis.lic" />
+               <include name="dictionary.properties" />
+            </patternset>
+         </fileset>
+      </jar>
+
+      <!-- build the Lido RAR file -->
+      <echo message="deploying lido.rar" />
+      <jar jarfile="serverjars/lido.rar" update="yes" >
+         <metainf dir="${jdo.home}/jca/jdbc/meta-inf" >
+            <patternset >
+               <include name="ra.xml" />
+            </patternset>
+         </metainf>
+         <fileset dir="serverjars" >
+            <patternset >
+               <include name="lidoExtra.jar" />
+            </patternset>
+         </fileset>
+         <fileset dir="${jdo.home}/lib" >
+            <patternset >
+               <include name="*.jar" />
+               <exclude name="jta*.jar" />
+               <exclude name="connector*.jar" />
+            </patternset>
+         </fileset>
+      </jar>
+
+      <copy file="serverjars/lido.rar" todir="${jboss.home}/server/default/deploy" />
+      <copy file="${book.path}/sayings/persistent/lido/lido-service.xml"
+            todir="${jboss.home}/server/default/deploy" />
+
+      <!-- rename and move the metadata file so Lido can find it from the EJB -->
+      <move file="${enhanced.dir}/${book.path}/sayings/persistent.jdo"
+            tofile="${enhanced.dir}/metadata.jdo" />
+
+      <echo message="calling ants/jboss.xml" />
+      <ant antfile="bookants/jboss.xml" target="sayings-ejb" />
+      <echo message="returned from ants/jboss.xml" />
+   </target>
+
+   <target name="lido-enhance" >
+      <property name="jdoname" value="${package}" />
+      <echo message="checking: ${book.path}/${package}/lido/${jdoname}.lido" />
+      <echo message="checking: ${book.path}/${package}/${jdoname}.jdo" />
+      <echo message="checking: ${book.path}/${package}/${subpackage}/${jdoname}.jdo" />
+
+      <available property="jdoxml" value="${book.path}/${package}/lido/${jdoname}.lido"
+            file="${book.path}/${package}/lido/${jdoname}.lido" />
+      <available property="jdoxml" value="${book.path}/${package}/${jdoname}.jdo"
+            file="${book.path}/${package}/${jdoname}.jdo" />
+      <available property="jdoxml" value="${book.path}/${package}/${subpackage}/${jdoname}.jdo"
+            file="${book.path}/${package}/${subpackage}/${jdoname}.jdo" />
+
+      <available property="jdoxml" value="${book.path}/${superpackage}/${package}/lido/${jdoname}.lido"
+            file="${book.path}/${superpackage}/${package}/lido/${jdoname}.lido" />
+      <available property="jdoxml" value="${book.path}/${superpackage}/${package}/${jdoname}.jdo"
+            file="${book.path}/${superpackage}/${package}/${jdoname}.jdo" />
+      <available property="jdoxml" value="${book.path}/${superpackage}/${package}/${subpackage}/${jdoname}.jdo"
+            file="${book.path}/${superpackage}/${package}/${subpackage}/${jdoname}.jdo" />
+
+      <condition property="dest-dir" value="${book.path}/${superpackage}" >
+         <not>
+            <equals arg1="${superpackage}" arg2="$${superpackage}" />
+         </not>
+      </condition>
+      <property name="dest-dir" value="${book.path}" />
+
+      <echo message="enhanced.dir: ${enhanced.dir}" />
+      <echo message="book.path: ${book.path}" />
+      <echo message="package: ${package}" />
+      <echo message="jdoxml: ${jdoxml}" />
+      <echo message="dest-dir: ${dest-dir}" />
+
+      <copy file="${jdoxml}"
+            tofile="${enhanced.dir}/${dest-dir}/${package}.jdo"
+            overwrite="yes"/>
+
+      <!-- use the enhancer tool -->
+      <java classname="${enhancer.tool}" classpath="${enhance.classpath}" fork="yes" failonerror="true" >
+         <!-- uncomment the next line to see tons of output -->
+         <arg value="-verbose" />
+         <arg line="-classpath ${build.dir}" />
+         <arg line="-metadata ${enhanced.dir}/${dest-dir}/${package}.jdo" />
+         <arg line="-out ${enhanced.dir}" />
+      </java>
+
+      <property name="sql.file" value="${package}.sql" />
+      <antcall target="do-schema" >
+         <param name="metadata.file" value="${enhanced.dir}/${dest-dir}/${package}.jdo" />
+      </antcall>
+      <echo message="returned from do-schema" />
+   </target >
+
+   <target name="do-schema" if="schema" >
+      <echo message="creating schema, metadata: ${metadata.file}" />
+      <echo message="creating schema, using classpath: ${run.classpath}" />
+      <java classname="${schema.tool}" classpath="${jdo.home}/lib/lido-dev.jar;${run.classpath}" fork="yes" failonerror="true">
+         <arg line="${schema.tool.args}" />
+         <arg line="-metadata ${metadata.file}" />
+         <arg line="-sql ${sql.file}" />
+      </java>
+   </target>
+
+   <target name="copy-metadata-file" if="metadata.file" >
+      <echo message="Copying file: ${metadata.file}" />
+      <copy file="${metadata.file}"
+            tofile="warfiles/WEB-INF/classes/metadata.jdo" />
+   </target>
+
+   <target name="setup-warfiles" >
+      <echo message="metadata.file: ${metadata.file}" />
+      <!-- delete the files in the warfiles directory -->
+      <delete includeEmptyDirs="true" >
+         <fileset dir="warfiles">
+            <patternset>
+               <!-- a bit dangerous, but does the job -->
+               <include name="**/*" />
+               <exclude name="keepme.txt" />
+            </patternset>
+         </fileset>
+      </delete>
+
+      <antcall target="copy-metadata-file" />
+
+      <copy todir="warfiles/WEB-INF/lib" >
+         <fileset dir="${jdo.home}/lib" >
+            <patternset>
+               <include name="connector_1_0_0.jar" />
+               <include name="jaas_1_0_0.jar" />
+               <include name="jdbc_2_0-stdext.jar" />
+               <include name="jta_1_0_1.jar" />
+               <include name="jdo_1_0_0.jar" />
+               <include name="lido-rt.jar" />
+               <include name="lido-api.jar" />
+               <include name="lido-rdb.jar" />
+               <include name="lido-jca.jar" />
+               <include name="lido-fdb.jar" />
+            </patternset>
+         </fileset>
+      </copy>
+      <copy todir="warfiles/WEB-INF/classes" >
+         <fileset dir="${jdo.home}/bin" >
+            <patternset>
+               <include name="dictionary.properties" />
+               <include name="libelis.lic" />
+            </patternset>
+         </fileset>
+      </copy>
+      <!-- to get the oracle zip working with tomcat, I had to unzip it and then jar it, then
+           deploy it to tomcat/shared/lib.  After that, it worked fine. -->
+   </target>
+
+   <target name="rental-servlet" depends="verify,common" >
+      <echo message="calling ${book.path}/rental/servlet/build.xml" />
+      <ant antfile="${book.path}/rental/servlet/build.xml" target="rental-servlet"/>
+      <echo message="returned from ${book.path}/rental/servlet/build.xml" />
+
+      <!-- copy the factory properties here for use by schematool -->
+      <copy file="${book.path}/rental/servlet/${servlet-design}/${schema-properties}" overwrite="yes"
+            tofile="${build.dir}/${book.path}/rental/persistent/factory.properties"/>
+
+      <antcall target="lido-enhance" >
+         <param name="superpackage" value="rental" />
+         <param name="package"      value="persistent" />
+         <param name="subpackage"   value="servlet" />
+         <param name="jdoname"      value="persistent" />
+      </antcall>
+      <echo message="returned from lido-enhance" />
+
+      <!-- in Lido's case, the setup-warfiles needs the JDO metadata found by lido-enhanced,
+           so we wait until now to call setup-warfiles -->
+      <antcall target="setup-warfiles" />
+
+      <!-- call the tomcat build -->
+      <ant antfile="bookants/tomcat.xml" target="rental-servlet" >
+      </ant>
+   </target>
+
+   <target name="rental-servlet-opr" depends="verify,common" >
+      <antcall target="rental-servlet">
+         <param name="servlet-design" value="opr" />
+         <param name="schema-properties" value="lido.properties" />
+         <param name="metadata.file" value="${enhanced.dir}/${book.path}/rental/persistent.jdo" />
+      </antcall>
+   </target>
+
+   <target name="rental-servlet-ejb" depends="verify,common,setup-warfiles" >
+      <!-- compile the ejb files -->
+      <echo message="calling ${book.path}/rental/ejb/build.xml" />
+      <ant antfile="${book.path}/rental/ejb/build.xml" target="rental" />
+      <echo message="returned from ${book.path}/rental/ejb/build.xml" />
+
+      <antcall target="lido-enhance" >
+         <param name="package" value="rental/persistent" />
+         <param name="jdoname" value="persistent" />
+         <param name="subpackage"   value="ejb" />
+         <!-- set this early because it cannot accept the default value in ${package} -->
+         <param name="sql.file" value="rental.sql" />
+      </antcall>
+      <echo message="returned from lido-enhance" />
+
+      <!-- build jar to hold extra Lido files -->
+      <jar jarfile="serverjars/lidoExtra.jar" update="yes" >
+         <fileset dir="${jdo.home}/bin" >
+            <patternset >
+               <include name="libelis.lic" />
+               <include name="dictionary.properties" />
+            </patternset>
+         </fileset>
+      </jar>
+
+      <!-- build the Lido RAR file -->
+      <echo message="deploying lido.rar" />
+      <jar jarfile="serverjars/lido.rar" update="yes" >
+         <metainf dir="${jdo.home}/jca/jdbc/meta-inf" >
+            <patternset >
+               <include name="ra.xml" />
+            </patternset>
+         </metainf>
+         <fileset dir="serverjars" >
+            <patternset >
+               <include name="lidoExtra.jar" />
+            </patternset>
+         </fileset>
+         <fileset dir="${jdo.home}/lib" >
+            <patternset >
+               <include name="*.jar" />
+               <exclude name="jta*.jar" />
+               <exclude name="connector*.jar" />
+            </patternset>
+         </fileset>
+      </jar>
+
+      <copy file="serverjars/lido.rar" todir="${jboss.home}/server/default/deploy" />
+      <copy file="${book.path}/rental/ejb/lido/lido-service.xml"
+            todir="${jboss.home}/server/default/deploy" />
+
+      <!-- rename and copy the metadata file so EJB can find it -->
+      <copy file="${enhanced.dir}/${book.path}/rental/persistent.jdo"
+            tofile="${enhanced.dir}/metadata.jdo" />
+
+      <!-- build the EJB jar file -->
+      <echo message="calling ants/jboss.xml" />
+      <ant antfile="bookants/jboss.xml" target="rental-ejb" />
+      <echo message="returned from ants/jboss.xml" />
+
+      <!-- build the servlet -->
+      <echo message="calling ${book.path}/rental/ejb/build.xml" />
+      <ant antfile="${book.path}/rental/ejb/build.xml" target="rental-servlet" />
+      <echo message="returned from ${book.path}/rental/ejb/build.xml" />
+
+      <!-- copy the files that the servlet client needs to talk to EJB in JBoss -->
+      <echo message="calling bookants/jboss.xml" />
+      <ant antfile="bookants/jboss.xml" target="rental-ejb-copy-files" />
+      <echo message="returned from bookants/jboss.xml" />
+
+      <ant antfile="bookants/tomcat.xml" target="rental-servlet-ejb" >
+         <property name="servlet-design" value="ejb" />
+      </ant>
+   </target>
+
+</project>

@@ -1,0 +1,1951 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" 
+"http://www.w3.org/TR/REC-html40/loose.dtd">
+<HTML>
+<HEAD>
+<!-- Converted by AscToHTM 4.1 - fully registered version -->
+  <TITLE>The JDO Learning Tools</TITLE>
+  <META NAME="Generator" CONTENT="AscToHTM from www.jafsoft.com">
+</HEAD>
+<BODY BGCOLOR="white">
+<BR>
+<div align=center>
+<H1> The JDO Learning Tools </H1>
+</div>
+<p>&nbsp;</p>
+
+<P>The JDO Learning Tools are designed to work with any JDO
+implementation.  Currently, there are build scripts for four JDO
+implementations, the JDO reference implementation, SolarMetric's Kodo
+implementation, Libelis's Lido implementation, and SignSoft's
+IntelliBO implementation.</P>
+
+<P>The JDO Learning Tools 1.0 are distributed as source only.
+Following the instructions in this document, you must set up a build
+environment to build the tools.</P>
+
+<P>This documentation applies to the v1-0-beta-2 version of JDO Learning
+Tools.</P>
+
+<P>You can download the JDO Learning Tools from the
+<A  HREF="http://sourceforge.net/projects/jdo-tools">project page</A>.</P>
+
+<P>&nbsp;</P>
+
+<P><H2>Table of Contents</H2></P>
+
+<!-- TOC_BEGIN -->
+<FONT SIZE=3 STYLE="font-size:12pt;"><STRONG>1 <A HREF="#Section_1">Overview</A></STRONG></FONT><BR>
+<BLOCKQUOTE>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>1.1 <A HREF="#Section_1.1">What is JDO?</A></STRONG></FONT><BR>
+  <BLOCKQUOTE>
+    <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>1.1.1 <A HREF="#Section_1.1.1">What is persistence?</A></STRONG></FONT><BR>
+  </BLOCKQUOTE>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>1.2 <A HREF="#Section_1.2">What are the JDO Learning Tools?</A></STRONG></FONT><BR>
+  <BLOCKQUOTE>
+    <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>1.2.1 <A HREF="#Section_1.2.1">Getting-started programs</A></STRONG></FONT><BR>
+    <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>1.2.2 <A HREF="#Section_1.2.2">Testing and exploration programs</A></STRONG></FONT><BR>
+    <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>1.2.3 <A HREF="#Section_1.2.3">Example applications that use JDO</A></STRONG></FONT><BR>
+  </BLOCKQUOTE>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>1.3 <A HREF="#Section_1.3">What will you find in this documentation?</A></STRONG></FONT><BR>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>1.4 <A HREF="#Section_1.4">Where can you learn more about JDO and the JDO Learning Tools?</A></STRONG></FONT><BR>
+  <BLOCKQUOTE>
+    <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>1.4.1 <A HREF="#Section_1.4.1">Information from Sun Microsystems</A></STRONG></FONT><BR>
+    <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>1.4.2 <A HREF="#Section_1.4.2">On-line resources</A></STRONG></FONT><BR>
+    <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>1.4.3 <A HREF="#Section_1.4.3">Books</A></STRONG></FONT><BR>
+  </BLOCKQUOTE>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>1.5 <A HREF="#Section_1.5">Credits</A></STRONG></FONT><BR>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>1.6 <A HREF="#Section_1.6">Copyright and licensing</A></STRONG></FONT><BR>
+</BLOCKQUOTE>
+<FONT SIZE=3 STYLE="font-size:12pt;"><STRONG>2 <A HREF="#Section_2">Setting up the Build Environment</A></STRONG></FONT><BR>
+<BLOCKQUOTE>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>2.1 <A HREF="#Section_2.1">Current limitations</A></STRONG></FONT><BR>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>2.2 <A HREF="#Section_2.2">What you need to get started</A></STRONG></FONT><BR>
+  <BLOCKQUOTE>
+    <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>2.2.1 <A HREF="#Section_2.2.1">Java, Ant, and a JDO implementation</A></STRONG></FONT><BR>
+    <BLOCKQUOTE>
+      <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>2.2.1.1 <A HREF="#Section_2.2.1.1">Getting the JDK</A></STRONG></FONT><BR>
+      <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>2.2.1.2 <A HREF="#Section_2.2.1.2">Getting Ant</A></STRONG></FONT><BR>
+      <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>2.2.1.3 <A HREF="#Section_2.2.1.3">Getting a JDO implementation</A></STRONG></FONT><BR>
+    </BLOCKQUOTE>
+    <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>2.2.2 <A HREF="#Section_2.2.2">Tomcat</A></STRONG></FONT><BR>
+    <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>2.2.3 <A HREF="#Section_2.2.3">JBoss</A></STRONG></FONT><BR>
+  </BLOCKQUOTE>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>2.3 <A HREF="#Section_2.3">Configuring the build environment</A></STRONG></FONT><BR>
+  <BLOCKQUOTE>
+    <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>2.3.1 <A HREF="#Section_2.3.1">Installing the JDO Learning Tools</A></STRONG></FONT><BR>
+    <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>2.3.2 <A HREF="#Section_2.3.2">The property files in the bookants directory</A></STRONG></FONT><BR>
+    <BLOCKQUOTE>
+      <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>2.3.2.1 <A HREF="#Section_2.3.2.1">The global.properties file</A></STRONG></FONT><BR>
+      <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>2.3.2.2 <A HREF="#Section_2.3.2.2">The custom.properties file</A></STRONG></FONT><BR>
+      <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>2.3.2.3 <A HREF="#Section_2.3.2.3">The default.properties file</A></STRONG></FONT><BR>
+      <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>2.3.2.4 <A HREF="#Section_2.3.2.4">Order of precedence for the property files</A></STRONG></FONT><BR>
+    </BLOCKQUOTE>
+    <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>2.3.3 <A HREF="#Section_2.3.3">Configuring Tomcat</A></STRONG></FONT><BR>
+    <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>2.3.4 <A HREF="#Section_2.3.4">Configuring JBoss</A></STRONG></FONT><BR>
+    <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>2.3.5 <A HREF="#Section_2.3.5">Special considerations for the JDO reference implementation</A></STRONG></FONT><BR>
+    <BLOCKQUOTE>
+      <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>2.3.5.1 <A HREF="#Section_2.3.5.1">Obtaining third party software</A></STRONG></FONT><BR>
+      <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>2.3.5.2 <A HREF="#Section_2.3.5.2">Initializing JDORI's datastore</A></STRONG></FONT><BR>
+    </BLOCKQUOTE>
+  </BLOCKQUOTE>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>2.4 <A HREF="#Section_2.4">Testing the build environment</A></STRONG></FONT><BR>
+  <BLOCKQUOTE>
+    <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>2.4.1 <A HREF="#Section_2.4.1">Using the -Dschema=generate switch</A></STRONG></FONT><BR>
+  </BLOCKQUOTE>
+</BLOCKQUOTE>
+<FONT SIZE=3 STYLE="font-size:12pt;"><STRONG>3 <A HREF="#Section_3">The TestJDOHelper Program</A></STRONG></FONT><BR>
+<BLOCKQUOTE>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>3.1 <A HREF="#Section_3.1">The location of the code for the TestJDOHelper program</A></STRONG></FONT><BR>
+</BLOCKQUOTE>
+<FONT SIZE=3 STYLE="font-size:12pt;"><STRONG>4 <A HREF="#Section_4">The TestFactory Program</A></STRONG></FONT><BR>
+<BLOCKQUOTE>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>4.1 <A HREF="#Section_4.1">The location of the code for the TestFactory program</A></STRONG></FONT><BR>
+</BLOCKQUOTE>
+<FONT SIZE=3 STYLE="font-size:12pt;"><STRONG>5 <A HREF="#Section_5">The MegaCups Program</A></STRONG></FONT><BR>
+<BLOCKQUOTE>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>5.1 <A HREF="#Section_5.1">Expected output from the MegaCups program</A></STRONG></FONT><BR>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>5.2 <A HREF="#Section_5.2">Initializing the datastore for the JDO reference implementation</A></STRONG></FONT><BR>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>5.3 <A HREF="#Section_5.3">Location of the code for the MegaCups program</A></STRONG></FONT><BR>
+</BLOCKQUOTE>
+<FONT SIZE=3 STYLE="font-size:12pt;"><STRONG>6 <A HREF="#Section_6">The Library Program</A></STRONG></FONT><BR>
+<BLOCKQUOTE>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>6.1 <A HREF="#Section_6.1">The data object model of the Library program</A></STRONG></FONT><BR>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>6.2 <A HREF="#Section_6.2">The console user interface of the Library program</A></STRONG></FONT><BR>
+  <BLOCKQUOTE>
+    <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>6.2.1 <A HREF="#Section_6.2.1">Modifying the Library program's configuration</A></STRONG></FONT><BR>
+  </BLOCKQUOTE>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>6.3 <A HREF="#Section_6.3">The location of the code for the Library program</A></STRONG></FONT><BR>
+</BLOCKQUOTE>
+<FONT SIZE=3 STYLE="font-size:12pt;"><STRONG>7 <A HREF="#Section_7">The StateTracker Program</A></STRONG></FONT><BR>
+<BLOCKQUOTE>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>7.1 <A HREF="#Section_7.1">The data object model of the StateTracker program</A></STRONG></FONT><BR>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>7.2 <A HREF="#Section_7.2">The purpose of the StateTracker program</A></STRONG></FONT><BR>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>7.3 <A HREF="#Section_7.3">The console user interface of the StateTracker</A></STRONG></FONT><BR>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>7.4 <A HREF="#Section_7.4">The location of the code for the StateTracker program</A></STRONG></FONT><BR>
+</BLOCKQUOTE>
+<FONT SIZE=3 STYLE="font-size:12pt;"><STRONG>8 <A HREF="#Section_8">The Rental Swing Application</A></STRONG></FONT><BR>
+<BLOCKQUOTE>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>8.1 <A HREF="#Section_8.1">Getting started with the Rental Swing application</A></STRONG></FONT><BR>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>8.2 <A HREF="#Section_8.2">The location of the Rental Swing application code</A></STRONG></FONT><BR>
+</BLOCKQUOTE>
+<FONT SIZE=3 STYLE="font-size:12pt;"><STRONG>9 <A HREF="#Section_9">The Rental Web Application</A></STRONG></FONT><BR>
+<BLOCKQUOTE>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>9.1 <A HREF="#Section_9.1">The location of the code for the Rental Web application</A></STRONG></FONT><BR>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>9.2 <A HREF="#Section_9.2">Build order dependency</A></STRONG></FONT><BR>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>9.3 <A HREF="#Section_9.3">Location of b-tree data files with reference implementation</A></STRONG></FONT><BR>
+</BLOCKQUOTE>
+<FONT SIZE=3 STYLE="font-size:12pt;"><STRONG>10 <A HREF="#Section_10">The Rental Enterprise Application</A></STRONG></FONT><BR>
+<BLOCKQUOTE>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>10.1 <A HREF="#Section_10.1">The location of the code for the Rental enterprise application</A></STRONG></FONT><BR>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>10.2 <A HREF="#Section_10.2">Build order dependency</A></STRONG></FONT><BR>
+</BLOCKQUOTE>
+<FONT SIZE=3 STYLE="font-size:12pt;"><STRONG>11 <A HREF="#Section_11">The QuoteServer EJB</A></STRONG></FONT><BR>
+<BLOCKQUOTE>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>11.1 <A HREF="#Section_11.1">The command line interface to the QuoteServer client</A></STRONG></FONT><BR>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>11.2 <A HREF="#Section_11.2">The location of the QuoteServer application's code</A></STRONG></FONT><BR>
+  <BLOCKQUOTE>
+    <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>11.2.1 <A HREF="#Section_11.2.1">The location of the property files for the QuoteServer application</A></STRONG></FONT><BR>
+  </BLOCKQUOTE>
+</BLOCKQUOTE>
+<FONT SIZE=3 STYLE="font-size:12pt;"><STRONG>12 <A HREF="#Section_12">Supported JDO Implementations</A></STRONG></FONT><BR>
+<BLOCKQUOTE>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>12.1 <A HREF="#Section_12.1">A note on testing</A></STRONG></FONT><BR>
+</BLOCKQUOTE>
+<FONT SIZE=3 STYLE="font-size:12pt;"><STRONG>13 <A HREF="#Section_13">Roadmap for future versions of the JDO Learning Tools</A></STRONG></FONT><BR>
+<FONT SIZE=3 STYLE="font-size:12pt;"><STRONG>14 <A HREF="#Section_14">Change log</A></STRONG></FONT><BR>
+<BLOCKQUOTE>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>14.1 <A HREF="#Section_14.1">v1-0-beta-1 First release</A></STRONG></FONT><BR>
+  <FONT SIZE=2 STYLE="font-size:10pt;"><STRONG>14.2 <A HREF="#Section_14.2">v1-0-beta-2 Fixes</A></STRONG></FONT><BR>
+</BLOCKQUOTE>
+<!-- TOC_END -->
+
+<P>&nbsp;</P>
+
+<A NAME="Section_1"> </A>
+<H2><U>1     Overview</U></H2>
+<BLOCKQUOTE>
+  <P>The JDO Learning Tools is a suite of Java programs that can be used
+  to test and explore a JDO implementation.  The JDO Learning Tools
+  also contain example applications for three application
+  architectures that use JDO:</P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI>Client/server application using Swing.</LI>
+
+      <LI>Web application using the MVC design pattern.</LI>
+
+      <LI>Enterprise JavaBeans.</LI>
+
+    </UL>
+  </BLOCKQUOTE>
+</BLOCKQUOTE>
+<A NAME="Section_1.1"> </A>
+<H2>1.1   What is JDO?</H2>
+<BLOCKQUOTE>
+  <P>Java Data Objects (JDO) is the specification, adopted by the Java
+  Community Process, that defines a universal and transparent
+  persistence service for Java objects.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_1.1.1"> </A>
+<H3>1.1.1 What is persistence?</H3>
+<BLOCKQUOTE>
+  <P>Persistence a one-word term to describe the ability of an
+  application or service to shuttle state between Java objects and
+  some type of datastore.  The datastore is usually a database.  In
+  the case of JDO, the database may be an object oriented database,
+  or a relational database, or any other type of database for which a
+  JDO implementation has been build.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_1.2"> </A>
+<H2>1.2   What are the JDO Learning Tools?</H2>
+<BLOCKQUOTE>
+  <P>The JDO Learning Tools serve three distinct purposes:
+  getting-started programs, testing and exploration programs, and
+  example applications for three different application
+  architectures.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_1.2.1"> </A>
+<H3>1.2.1 Getting-started programs</H3>
+<BLOCKQUOTE>
+  <P>Two of the tools, TestJDOHelper and TestFactory are simple "Hello,
+  JDO!" examples.  By building them, you can verify that you have set
+  up correctly the tools and the JDO implementation.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_1.2.2"> </A>
+<H3>1.2.2 Testing and exploration programs</H3>
+<BLOCKQUOTE>
+  <P>Three of the tools, MegaCups, Library, and StateTracker are
+  designed to test the JDO implementation.  Using them, you can gain
+  insight into how JDO works.</P>
+
+  <P>The MegaCups program tests JDO's datastore transactions when the
+  data object is contested.  Using the interactive Library program,
+  you can test the JDO Query Language.  Using the interactive
+  StateTracker program, you can test the PersistenceManager
+  interface.</P>
+
+  <P>None of the testing and exploration programs are good examples of
+  how to build your own application.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_1.2.3"> </A>
+<H3>1.2.3 Example applications that use JDO</H3>
+<BLOCKQUOTE>
+  <P>The remaining tools, the Rental Swing application, the Rental Web
+  application, and the Rental enterprise application are examples of
+  three application architectures.
+  </P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI>Client/server application Swing and JDO.</LI>
+
+      <LI>Web application using JDO and the MVC design pattern.</LI>
+
+      <LI>Web application using EJB and the MVC design pattern.</LI>
+
+    </UL>
+  </BLOCKQUOTE>
+  <P>Additional examples of using JDO within Enterprise JavaBeans are
+  provided by the QuoteServer application.  The QuoteServer can be
+  built for five flavors of EJBs:</P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI>Stateless CMT session EJB</LI>
+
+      <LI>Stateless BMT session EJB</LI>
+
+      <LI>Stateful CMT session EJB</LI>
+
+      <LI>Stateful BMT session EJB</LI>
+
+      <LI>Entity BMP EJB</LI>
+
+    </UL>
+  </BLOCKQUOTE>
+  <P>The purpose of these programs is to model in a simple way a working
+  design that fits the application architecture and uses JDO.  You
+  can use them as templates for your own applications.  They also
+  provide a starting point for experimenting with application design
+  when using JDO.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_1.3"> </A>
+<H2>1.3   What will you find in this documentation?</H2>
+<BLOCKQUOTE>
+  <P>This documentation describes how to setup the JDO Learning Tools,
+  how to build the tools and example programs, and how to run them.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_1.4"> </A>
+<H2>1.4   Where can you learn more about JDO and the JDO Learning Tools?</H2>
+<BLOCKQUOTE>
+  <P>There are a variety of resources available that you can use to
+  learn more about JDO.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_1.4.1"> </A>
+<H3>1.4.1 Information from Sun Microsystems</H3>
+<BLOCKQUOTE>
+  <P>Sun Microsystems' home page for JDO is <A HREF="http://java.sun.com/products/jdo/">http://java.sun.com/products/jdo/</A>.
+  On this page, you will find links to the JDO specification
+  (primarily written for JDO implementers), the JDO reference
+  implementation, which you can use with the JDO Learning Tools,
+  and other information.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_1.4.2"> </A>
+<H3>1.4.2 On-line resources</H3>
+<BLOCKQUOTE>
+  <P>There are a variety of places where you can learn more about JDO.
+  JDO Central (<A HREF="http://jdocentral.com/">http://jdocentral.com/</A>) is supported by many JDO
+  vendors.  It is a good source of information and has lively
+  discussion groups.</P>
+
+  <P>Robin Roos Yahoo mailing list (<A HREF="http://groups.yahoo.com/group/JavaDataObjects/">http://groups.yahoo.com/group/JavaDataObjects/</A>)
+  is frequented by JDO users and experts.</P>
+
+  <P>In addition, the companies that are producing JDO implementations
+  also provide quite a bit of information as well.  Check out the
+  implementations that work with the JDO Learning Tools in section 12,
+  "<A HREF="#Section_12">Supported JDO Implementations</A>"</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_1.4.3"> </A>
+<H3>1.4.3 Books</H3>
+<BLOCKQUOTE>
+  <P>At this writing, there are four books that cover JDO in depth.
+  </P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI>David Ezzio, "Using and Understanding Java Data Objects", Apress</LI>
+
+      <LI>Robin Roos, "Java Data Objects", Addison-Wesley</LI>
+
+      <LI>David Jordan and Craig Russell, "Java Data Objects", O'Reilly</LI>
+
+      <LI>Sameer Tyagi and others, "Core Java Data Objects", Prentice Hall</LI>
+
+    </UL>
+  </BLOCKQUOTE>
+  <P>Any of the books can be purchased at Amazon or your local bookstore.</P>
+
+  <P>As one of its many virtues, <A  HREF="http://www.amazon.com/exec/obidos/ASIN/1590590430">Using and Understanding Java Data Objects</A>
+  has a four-chapter tutorial on the JDO Learning Tools.
+  The first chapter of the tutorial, which is chapter 8 in the book,
+  is available under the "Sample Chapter" link on the <A  HREF="http://www.apress.com/book/bookDisplay.html?bID=106">publisher's book page</A>.
+  </P>
+</BLOCKQUOTE>
+<A NAME="Section_1.5"> </A>
+<H2>1.5   Credits</H2>
+<BLOCKQUOTE>
+  <P>
+  This documentation was written by David Ezzio.
+  </P>
+  <P>
+  The JDO Learning Tools were originally written by David Ezzio.  He used
+  them to explore Java Data Objects while writing his book.
+  </P>
+</BLOCKQUOTE>
+<A NAME="Section_1.6"> </A>
+<H2>1.6   Copyright and licensing</H2>
+<!-- User-specified pre-formatted text -->
+<PRE>
+   The JDO Learning Tools, version 1.0
+   Copyright (c) 2002, 2003 Yankee Software
+   Additional contributors hold copyright to portions of the software.
+   Use and distribution are subject to the GNU General Public License Version 2.
+   This software comes with ABSOLUTELY NO WARRANTY.  For details see LICENSE.TXT.
+</PRE>
+<!-- end of user-specified pre-formatted text -->
+<BR>
+<A NAME="Section_2"> </A>
+<H2><U>2     Setting up the Build Environment</U></H2>
+<BLOCKQUOTE>
+  <P>This section has the instructions to set up your build environment.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_2.1"> </A>
+<H2>2.1   Current limitations</H2>
+<BLOCKQUOTE>
+  <P>As of v1-0-beta-2, the JDO Learning Tools are currently limited to
+  the Microsoft Windows platform.  The limitation is a result of a
+  lack of testing for any other platform.  No doubt such testing
+  would reveal several deficiencies in the Ant build scripts.</P>
+
+  <P>The JDO Learning Tools currently use only standalone Tomcat and
+  JBoss as the servlet and EJB containers respectively.  The build
+  scripts or configuration variables needed to use different
+  containers or servlet containers build into JBoss do not currently
+  exist.</P>
+
+  <P>The JDO Learning Tools currently support only four of the many JDO
+  implementations.  The build scripts to support other
+  implementations currently do not exist.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_2.2"> </A>
+<H2>2.2   What you need to get started</H2>
+<BLOCKQUOTE>
+  <P>You can either configure everything for the JDO Learning Tools up
+  front, or you can configure what you need as you go along.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_2.2.1"> </A>
+<H3>2.2.1 Java, Ant, and a JDO implementation</H3>
+<BLOCKQUOTE>
+  <P>To build and run any of the tools, you need to install
+  JDK 1.3.1 (or JDK 1.4) Ant 1.4.1 (or later 1.x)  and a supported JDO
+  implementation.</P>
+
+  <P>If all you are going to run are the getting-started programs, the
+  testing and exploration programs, and the Rental Swing application,
+  then the configuration steps in this section and its subsections
+  are all you need.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_2.2.1.1"> </A>
+<H4>2.2.1.1  Getting the JDK</H4>
+<BLOCKQUOTE>
+  <P>If you don't already have a suitable JDK installed on your
+  machine, go to the Sun Microsystems Web site (<A HREF="http://java.sun.com/">http://java.sun.com/</A>)
+  to download the JDK (also known as the SDK).</P>
+
+  <P>Follow the directions with the JDK to set it up on your machine.</P>
+
+  <P>Most JDO implementations support JDK 1.4 or are in the
+  process of doing so.  As of v1-0-beta-2, the JDO Learning Tools has been
+  used with both JDK 1.3.1 and JDK 1.4.1. However, I believe that
+  JDORI 1.0 is dependent on a pre-1.4.1 JDK.  JDORI 1.0.1, which
+  is expected to be released any day now, works with either JDK 1.3.1 or 1.4.1 in my 
+  tests.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_2.2.1.2"> </A>
+<H4>2.2.1.2  Getting Ant</H4>
+<BLOCKQUOTE>
+  <P>If you do not already have Ant 1.4.1 or later installed on
+  your machine, go to the Apache Ant Web site (<A HREF="http://ant.apache.org">http://ant.apache.org</A>)
+  to download the installation.</P>
+
+  <P>Follow the directions with Ant to set it up on your machine.</P>
+
+  <P>The JDO Learning Tools has been tested with Ant 1.4.1 and 1.5.3.
+  Any later 1.x version should also work.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_2.2.1.3"> </A>
+<H4>2.2.1.3  Getting a JDO implementation</H4>
+<BLOCKQUOTE>
+  <P>See section 12, "<A HREF="#Section_12">Supported JDO Implementations</A>" for
+  information on finding JDO implementations for which the JDO
+  Learning Tools has build scripts.</P>
+
+  <P>Follow the directions with the JDO implementation to set it up.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_2.2.2"> </A>
+<H3>2.2.2 Tomcat</H3>
+<BLOCKQUOTE>
+  <P>To build the Rental Web and the Rental enterprise example
+  applications, you will need a Tomcat 4.1 or later
+  installation.</P>
+
+  <P>Although the JDO Learning Tools should work with any servlet/JSP
+  container, as of v1-0-beta-2, it has build scripts only for
+  stand-alone Tomcat.</P>
+
+  <P>The JDO Learning Tools have been tested with Tomcat 4.1.12,
+  but they should work with any 4.x version of Tomcat.</P>
+
+  <P>To download the Tomcat installation, go to the Apache Tomcat web
+  site at <A HREF="http://jakarta.apache.org/tomcat/">http://jakarta.apache.org/tomcat/</A>.</P>
+
+  <P>Follow the directions that come with the download to install
+  Tomcat.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_2.2.3"> </A>
+<H3>2.2.3 JBoss</H3>
+<BLOCKQUOTE>
+  <P>To build the Rental enterprise and QuoteServer example applications
+  of Enterprise JavaBeans that use JDO, you will need a JBoss 3.0.4
+  or later installation.</P>
+
+  <P>Although the JDO Learning Tools should work with any EJB container,
+  as of v1-0-beta-2, it has build scripts only for JBoss.</P>
+
+  <P>To download the JBoss installation, go to the JBoss Web site at
+  <A HREF="http://www.jboss.org/">http://www.jboss.org/</A>.</P>
+
+  <P>Follow the instructions to set up JBoss.</P>
+
+  <P>Please note that JBoss is available with a Jetty servlet container
+  and a Tomcat servlet container.  As of v1-0-beta-2, the JDO
+  Learning Tools has build scripts only for the stand-alone Tomcat
+  servlet container.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_2.3"> </A>
+<H2>2.3   Configuring the build environment</H2>
+<BLOCKQUOTE>
+  <P>After installing the JDO Learning Tools, you will need to configure
+  the property files, the Tomcat installation, and the JBoss
+  installation.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_2.3.1"> </A>
+<H3>2.3.1 Installing the JDO Learning Tools</H3>
+<BLOCKQUOTE>
+  <P>Unzip the JDO Learning Tools into a directory of your choice.
+  Hereafter, this location is called the <STRONG>tools-home</STRONG> directory.
+  Throughout this documentation, when a directory path related to the
+  tools is mentioned, the implied base directory is the <STRONG>tools-home</STRONG>
+  directory.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_2.3.2"> </A>
+<H3>2.3.2 The property files in the bookants directory</H3>
+<BLOCKQUOTE>
+  <P>There are three property files in the <STRONG>tools-home/bookants</STRONG>
+  that control the Ant builds
+  </P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI>global.properties</LI>
+
+      <LI>default.properties</LI>
+
+      <LI>custom.properties</LI>
+
+    </UL>
+  </BLOCKQUOTE>
+</BLOCKQUOTE>
+<A NAME="Section_2.3.2.1"> </A>
+<H4>2.3.2.1  The global.properties file</H4>
+<BLOCKQUOTE>
+  <P>The <STRONG>global.properties</STRONG> file is the place where operating system
+  wide properties are defined.  As long as you are using Microsoft
+  Windows, you should not have to change these properties.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_2.3.2.2"> </A>
+<H4>2.3.2.2  The custom.properties file</H4>
+<BLOCKQUOTE>
+  <P>The <STRONG>custom.properties</STRONG> file contains the two settings that are
+  required to inform the Ant scripts of the JDO implementation that
+  you are using and the location of its home directory.</P>
+
+  <P>The <STRONG>jdo.tool</STRONG> property names the implementation specific build
+  script.  It must be one of the four current build scripts:</P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI>jdori</LI>
+
+      <LI>kodo</LI>
+
+      <LI>lido</LI>
+
+      <LI>intellibo</LI>
+
+    </UL>
+  </BLOCKQUOTE>
+  <P>The <STRONG>jdo.tool</STRONG> property can also name a build script of your
+  making.</P>
+
+  <P>The <STRONG>jdo.home</STRONG> property names the home directory of the JDO
+  implementation that you have selected.</P>
+
+  <P>You can modify the <STRONG>custom.properties</STRONG> file directly, but if
+  you are planning to use the JDO Learning Tools with more than one
+  JDO implementation, you should modify the property file that is
+  specific to the implementation.  Currently there are four:</P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI>jdori.properties</LI>
+
+      <LI>kodo.properties</LI>
+
+      <LI>lido.properties</LI>
+
+      <LI>intellibo.properties</LI>
+
+    </UL>
+  </BLOCKQUOTE>
+  <P>To switch from one JDO implementation to the next, you copy the
+  implementation's property file into the <STRONG>custom.properties</STRONG>
+  file.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_2.3.2.3"> </A>
+<H4>2.3.2.3  The default.properties file</H4>
+<BLOCKQUOTE>
+  <P>The <STRONG>default.properties</STRONG> file has several properties that identify
+  the location of the various tools used during build and execution
+  of the JDO Learning Tools:</P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI>java.home    : home directory of the JDK</LI>
+
+      <LI>jdbc.jar     : location of the JDBC driver Jar (needed only for
+      implementations that use JDBC)</LI>
+
+      <LI>j2ee.home    : location of J2EE home (needed only for the
+      j2ee.jar, which is assumed to be in the
+      <STRONG>lib</STRONG> subdirectory of the directory named by
+      the j2ee.home property)</LI>
+
+      <LI>jboss.home   : location of JBoss home</LI>
+
+      <LI>tomcat.home  : location of Tomcat home</LI>
+
+    </UL>
+  </BLOCKQUOTE>
+  <P>These settings, once determined, do not need to change when
+  switching JDO implementations.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_2.3.2.4"> </A>
+<H4>2.3.2.4  Order of precedence for the property files</H4>
+<BLOCKQUOTE>
+  <P>The properties are read in the order, <STRONG>global.properties</STRONG>,
+  <STRONG>custom.properties</STRONG>, and <STRONG>default.properties</STRONG>.</P>
+
+  <P>If a property is set in an earlier file, it cannot be
+  modified in a later file.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_2.3.3"> </A>
+<H3>2.3.3 Configuring Tomcat</H3>
+<BLOCKQUOTE>
+  <P>If you are not going to build the Rental enterprise application,
+  then you do not have to make any special configurations for Tomcat.
+  Tomcat's default HTTP port is 8080.</P>
+
+  <P>If you are going to build the Rental enterprise application, you
+  should edit the <STRONG>server.xml</STRONG> file in the <STRONG>config</STRONG> 
+  directory under
+  the <STRONG>tomcat-home</STRONG> directory.  Find the place where the "Coyote
+  HTTP/1.1 Connector on port 8080" is configured.  Alter the port to
+  another port, say 8000.  This change reconfigures Tomcat to listen
+  for HTTP connections on port 8000.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_2.3.4"> </A>
+<H3>2.3.4 Configuring JBoss</H3>
+<BLOCKQUOTE>
+  <P>If you are not going to build the Rental enterprise application,
+  then you do not have to make any special configuration for JBoss.</P>
+
+  <P>If you are going to build the Rental enterprise application, then
+  follow the directions in the preceding section for configuring
+  Tomcat and make the following changes to configure JBoss.
+  Edit the <STRONG>jboss-service.xml</STRONG> file found in the</P>
+
+  <BLOCKQUOTE>
+    <P><STRONG>server/default/deploy/jbossweb.sar/meta-inf</STRONG></P>
+
+  </BLOCKQUOTE>
+  <P>directory under the <STRONG>jboss-home</STRONG> directory.  Within this file, find
+  the place where an AJP13 listener is added on port 8009.  Comment
+  out the portion of the XML defined by the <STRONG>Call</STRONG> tag.  This
+  prevents both Tomcat and JBoss from attempting to listen on the same port
+  for proxy calls from a Web server.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_2.3.5"> </A>
+<H3>2.3.5 Special considerations for the JDO reference implementation</H3>
+<BLOCKQUOTE>
+  <P>If you are using the JDO reference implementation (JDORI), there
+  are a couple of configuration steps that are easily overlooked.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_2.3.5.1"> </A>
+<H4>2.3.5.1 Obtaining third party software</H4>
+<BLOCKQUOTE>
+  <P>As mentioned in the README.html document that comes with the JDO
+  reference implementation (JDORI), the JDORI uses the language
+  translator ANTLR (ANother Tool for Language Recognition).
+  Although the current version of ANTLR is 2.7.2, JDORI needs
+  version 2.7.0. You can download this distribution from
+  <A HREF="http://www.antlr.org">http://www.antlr.org</A>. ANTLR is public domain software written by
+  Terence Parr.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_2.3.5.2"> </A>
+<H4>2.3.5.2 Initializing JDORI's datastore</H4>
+<BLOCKQUOTE>
+  <P>If you build the tools in the order presented here, you will need
+  to initialize the b-tree datastore for the <STRONG>MegaCups</STRONG> program. If
+  you build the tools in a different order, you still need a
+  one-time initialization of the b-tree datastore. See section <A HREF="#Section_5.2">5.2</A>
+  for further information.
+  </P>
+</BLOCKQUOTE>
+<A NAME="Section_2.4"> </A>
+<H2>2.4   Testing the build environment</H2>
+<BLOCKQUOTE>
+  <P>
+  To test the build environment, first use the following command:
+  </P>
+</BLOCKQUOTE>
+<!-- User-specified pre-formatted text -->
+<PRE>
+      ant -projecthelp
+</PRE>
+<!-- end of user-specified pre-formatted text -->
+<BLOCKQUOTE>
+  <P>
+  </P>
+  <P>
+  You should see output that looks like the following:
+  </P>
+</BLOCKQUOTE>
+<!-- User-specified pre-formatted text -->
+<PRE>
+      E:\JDOLearningTools\jdo-tools\bookants&gt;ant -projecthelp
+      Buildfile: build.xml
+      Default target:
+
+       Help                   The default target for this build script
+
+      Main targets:
+
+       Help                   The default target for this build script
+       clean-out              removes all files in output directories
+       learning-programs      Builds all learning-programs
+       library                build Library example
+       megacups               build MegaCups example
+       rental-gui             build RentalGui example
+       rental-servlet-ejb     build rental servlet example that uses rental ejb
+       rental-servlet-opr     build rental servlet example for one pm per request
+                                 design
+       sayings-entity         build Entity BMP EJB sayings example
+       sayings-stateful-bmt   build BMT Stateful Session EJB sayings example
+       sayings-stateful-cmt   build CMT Stateful Session EJB sayings example
+       sayings-stateless-bmt  build BMT Stateless Session EJB sayings example
+       sayings-stateless-cmt  build CMT Stateless Session EJB sayings example
+       statetracker           build Statetracker example
+       testfactory            build TestFactory example
+       testjdohelper          build TestJDOHelper example
+
+      Subtargets:
+
+       are-we-ready
+       help
+       set-schema-variable
+       verify
+
+
+      BUILD SUCCESSFUL
+
+      Total time: 1 second
+      E:\JDOLearningTools\jdo-tools\bookants&gt;
+</PRE>
+<!-- end of user-specified pre-formatted text -->
+<BLOCKQUOTE>
+  <P>
+  </P>
+  <P>
+  Next build the clean-out target.
+  </P>
+</BLOCKQUOTE>
+<!-- User-specified pre-formatted text -->
+<PRE>
+      ant clean-out
+</PRE>
+<!-- end of user-specified pre-formatted text -->
+<BLOCKQUOTE>
+  <P>
+  </P>
+  <P>
+  You should see output that looks like the following:
+  </P>
+</BLOCKQUOTE>
+<!-- User-specified pre-formatted text -->
+<PRE>
+      E:\JDOLearningTools\jdo-tools\bookants&gt;ant clean-out
+      Buildfile: build.xml
+
+      are-we-ready:
+
+      verify:
+
+      clean-out:
+           [echo] Deleting files that the build generates
+
+      BUILD SUCCESSFUL
+
+      Total time: 1 second
+      E:\JDOLearningTools\jdo-tools\bookants&gt;
+</PRE>
+<!-- end of user-specified pre-formatted text -->
+<BLOCKQUOTE>
+  <BR>
+  <P>After successfully configuring the build environment,
+  you are ready to start building and using the JDO Learning Tools.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_2.4.1"> </A>
+<H3>2.4.1 Using the -Dschema=generate switch</H3>
+<BLOCKQUOTE>
+  <P>When using the JDO reference implementation, the database schema
+  is generated automatically.</P>
+
+  <P>When using the Kodo implementation, the schema is usually generated
+  automatically.  If you run into a case where this does not occur,
+  you can use the <STRONG>-Dschema=generate</STRONG> switch as explained below.</P>
+
+  <P>When using the Lido or IntelliBO implementations, you must use the
+  -Dschema=generate switch to get the DDL files (SQL files) needed to
+  create the schema in the database.  As long as you do not alter the
+  class name, the class package name, or persistent fields, you do
+  not need to regenerate the DDL files with each build.
+  Consequently, you will use the <STRONG>-Dschema=generate</STRONG> switch only
+  occasionally.
+  </P>
+  <P>
+  The <STRONG>learning-programs</STRONG> target automatically supplies the switch.
+  </P>
+  <P>
+  To use the switch add it to your Ant invocation command as shown in
+  the following example:
+  </P>
+</BLOCKQUOTE>
+<!-- User-specified pre-formatted text -->
+<PRE>
+      ant -Dschema=generate &lt;target&gt;
+</PRE>
+<!-- end of user-specified pre-formatted text -->
+<BLOCKQUOTE>
+  <P>
+  </P>
+</BLOCKQUOTE>
+<A NAME="Section_3"> </A>
+<H2><U>3     The TestJDOHelper Program</U></H2>
+<BLOCKQUOTE>
+  <P>
+  The build target for the TestJDOHelper program is
+  </P>
+</BLOCKQUOTE>
+<!-- User-specified pre-formatted text -->
+<PRE>
+      ant testjdohelper
+</PRE>
+<!-- end of user-specified pre-formatted text -->
+<BLOCKQUOTE>
+  <P>
+  </P>
+  <P>
+  This target builds the tool and runs it.  It also places a
+  runTestJDOHelper.bat file in the <STRONG>tools-home</STRONG> directory.  You
+  can use the batch file to run the test again.
+  </P>
+  <P>
+  The last steps of the Ant output for the <STRONG>testjdohelper</STRONG> target
+  should look something like the following:
+  </P>
+</BLOCKQUOTE>
+<!-- User-specified pre-formatted text -->
+<PRE>
+      testjdohelper:
+        [echo] creating runTestJDOHelper.bat
+        [echo] Running TestJDOHelper
+        [java] The JDO Learning Tools, version 1.0
+        [java] Copyright (c) 2002, 2003 Yankee Software
+        [java] Additional contributors hold copyright to portions of the software.
+        [java] Use and distribution are subject to the GNU General Public License Version 2.
+        [java] This software comes with ABSOLUTELY NO WARRANTY.  For details see LICENSE.TXT
+        [java] -- listing properties --
+        [java] javax.jdo.option.RestoreValues=false
+        [java] javax.jdo.option.ConnectionURL=fostore:FOStoreTestDB
+        [java] javax.jdo.option.Optimistic=false
+        [java] javax.jdo.option.ConnectionUserName=JDO
+        [java] javax.jdo.option.ConnectionPassword=book
+        [java] javax.jdo.option.NontransactionalWrite=false
+        [java] javax.jdo.PersistenceManagerFactoryClass=com.sun.jdori.fostore.FOStorePMF
+        [java] javax.jdo.option.NontransactionalRead=false
+        [java] javax.jdo.option.IgnoreCache=false
+        [java] javax.jdo.option.RetainValues=false
+        [java] javax.jdo.option.Multithreaded=false
+        [java] Got the PMF okay
+        [echo] created runTestJDOHelper.bat
+
+      BUILD SUCCESSFUL
+</PRE>
+<!-- end of user-specified pre-formatted text -->
+<BLOCKQUOTE>
+  <BR>
+  <P>When you successfully run the TestJDOHelper getting-started
+  program, you have connected to JDO, obtained a
+  <STRONG>PersistenceManagerFactory</STRONG> from JDO, and obtained a
+  <STRONG>PersistenceManager</STRONG> from the factory.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_3.1"> </A>
+<H2>3.1   The location of the code for the TestJDOHelper program</H2>
+<BLOCKQUOTE>
+  <P>There is one source file <STRONG>TestJDOHelper.java</STRONG> that is found in the
+  <STRONG>com/ysoft/jdo/book/factory</STRONG> directory under the 
+  <STRONG>tools-home</STRONG>
+  directory.  The property file passed to the program is contained in
+  the vendor specific subdirectory under this path.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_4"> </A>
+<H2><U>4     The TestFactory Program</U></H2>
+<BLOCKQUOTE>
+  <P>The build target for TestFactory is <STRONG>testfactory</STRONG>.
+  This target builds the tool and runs it.  It also places a
+  runTestFactory.bat file in the <STRONG>tools-home</STRONG> directory.
+  You can use the batch file to run the test again.
+  </P>
+  <P>
+  The last steps of the Ant output for the <STRONG>testfactory</STRONG>
+  target should look something like the following:
+  </P>
+</BLOCKQUOTE>
+<!-- User-specified pre-formatted text -->
+<PRE>
+         testfactory:
+           [echo] creating runTestFactory.bat
+           [echo] running TestFactory
+           [java] The JDO Learning Tools, version 1.0
+           [java] Copyright (c) 2002, 2003 Yankee Software
+           [java] Additional contributors hold copyright to portions of the software.
+           [java] Use and distribution are subject to the GNU General Public License Version 2.
+           [java] This software comes with ABSOLUTELY NO WARRANTY.  For details see LICENSE.TXT
+           [java] Starting TestFactory ...
+           [java] Using adaptor class: com.ysoft.jdo.book.factory.jdori.JDORIAdaptor
+           [java] The database (FOStoreTestDB.btd) exists
+           [java] Using URL: (fostore:FOStoreTestDB)
+           [java] Loaded factory adaptor: com.ysoft.jdo.book.factory.jdori.JDORIAdaptor
+           [java]
+           [java] Supported JDO Options
+           [java]    javax.jdo.option.TransientTransactional
+           [java]    javax.jdo.option.NontransactionalRead
+           [java]    javax.jdo.option.NontransactionalWrite
+           [java]    javax.jdo.option.RetainValues
+           [java]    javax.jdo.option.Optimistic
+           [java]    javax.jdo.option.ApplicationIdentity
+           [java]    javax.jdo.option.DatastoreIdentity
+           [java]    javax.jdo.option.ArrayList
+           [java]    javax.jdo.option.HashMap
+           [java]    javax.jdo.option.Hashtable
+           [java]    javax.jdo.option.LinkedList
+           [java]    javax.jdo.option.TreeMap
+           [java]    javax.jdo.option.TreeSet
+           [java]    javax.jdo.option.Vector
+           [java]    javax.jdo.option.Array
+           [java]    javax.jdo.option.NullCollection
+           [java]    javax.jdo.query.JDOQL
+           [java] Unsupported JDO Options
+           [java]    javax.jdo.option.RestoreValues
+           [java]    javax.jdo.option.NonDurableIdentity
+           [java]    javax.jdo.option.ChangeApplicationIdentity
+           [java]    javax.jdo.option.List
+           [java]    javax.jdo.option.Map
+           [java] Non-configurable properties
+           [java]    Key: VendorName, value: Sun Microsystems
+           [java]    Key: VersionNumber, value: 1.0
+           [java] Initial PMF transaction settings
+           [java]    Optimistic: true
+           [java]    Non-trans read: true
+           [java]    Non-trans write: false
+           [java]    RetainValues: true
+           [java]    RestoreValues: true
+           [java] Connection information
+           [java]    Connection driver: null
+           [java]    Connection factory: null
+           [java]    Connection factory2: null
+           [java]    Connection URL: fostore:FOStoreTestDB
+           [java]    Connection UserName: JDO
+           [java] Caching info
+           [java]    Ignore Cache: true
+           [java] Threading setting for PM's
+           [java]    Multithreading turned on: false
+           [java] This PMF can be serialized
+           [java] This PMF implements javax.naming.Referenceable
+           [java]    reference class name: com.sun.jdori.fostore.FOStorePMF
+           [java]    factory class location: null
+           [java]    factory class name: com.sun.jdori.fostore.FOStorePMFFactory
+           [java]    Listing addresses for the reference
+           [java]       StringRefAddr: javax.jdo.option.ConnectionPassword,obbx
+           [java]       StringRefAddr: javax.jdo.PersistenceManagerFactoryClass,com.sun.jdori.fostore.FOStorePMF
+           [java]       StringRefAddr: javax.jdo.option.ConnectionURL,fostore:FOStoreTestDB
+           [java]       StringRefAddr: javax.jdo.option.ConnectionUserName,JDO
+           [java] Obtained PersistenceManagerFactory
+           [java] Just got 1 PersistenceManagers!
+           [java] Closing FOStoreDB
+           [java] Closing the FOStorePMF
+           [java] -- All done!
+           [echo] created runTestFactory.bat
+         BUILD SUCCESSFUL
+</PRE>
+<!-- end of user-specified pre-formatted text -->
+<BLOCKQUOTE>
+  <BR>
+  <P>When you successfully run the TestFactory program, you have
+  successfully connected to JDO using a constructor to obtain the
+  vendor's class that implements a <STRONG>PersistenceManagerFactory</STRONG>
+  interface.  You have obtained a <STRONG>PersistenceManager</STRONG> from the
+  factory, and interrogated its default property settings,
+  as well as tested it for the <STRONG>java.io.Serializable</STRONG> interface and
+  the <STRONG>javax.naming.Referenceable</STRONG> interface.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_4.1"> </A>
+<H2>4.1   The location of the code for the TestFactory program</H2>
+<BLOCKQUOTE>
+  <P>The code for the TestFactory program is contained in the
+  <STRONG>com/ysoft/jdo/book/factory</STRONG> directory and in its subdirectories.
+  The code uses a factory pattern by loading the appropriate factory
+  class for the <STRONG>JDOFactoryAdaptor</STRONG> interface.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_5"> </A>
+<H2><U>5     The MegaCups Program</U></H2>
+<BLOCKQUOTE>
+  <P>The MegaCups program tests conflicting transactions in JDO.  It is
+  primarily useful for seeing the behavior of conflicting datastore
+  transactions.</P>
+
+  <P>The build target is <STRONG>megacups</STRONG>.  This target builds the testing
+  program and creates the batch file <STRONG>runMegaCups.bat</STRONG> to execute it.</P>
+
+  <P>Unlike the TestJDOHelper and TestFactory programs, the <STRONG>megacups</STRONG>
+  target does not execute the MegaCups program.  Instead, you will
+  need to change to the <STRONG>tools-home</STRONG> directory and execute the
+  <STRONG>runMegaCups.bat</STRONG> batch file.</P>
+
+  <P>For the typical JDO implementation, the datastore transactions
+  create locks in the datastore.  As a result, each worker thread
+  waits on the locks that the JDO implementation is creating in the
+  datastore.</P>
+
+  <P>By default, each invocation of the MegaCups programs starts up five
+  worker threads.  If the JDO implementation targets a multiuser
+  datastore, you can run the MegaCups program multiple times
+  concurrently.  In the case of the JDO reference implementation,
+  this is not possible since the b-tree datastore that it targets is
+  not multiuser.  However, the reference implementation still allows
+  multiple threads to run safely within one executing MegaCups
+  program.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_5.1"> </A>
+<H2>5.1   Expected output from the MegaCups program</H2>
+<BLOCKQUOTE>
+  <P>The output from running the MegaCups program will look something
+  like the following:
+  </P>
+</BLOCKQUOTE>
+<!-- User-specified pre-formatted text -->
+<PRE>
+      Mark added coffee to CoffeeUrn [Kitchen-160] contains 20 cups
+      Sam drank a cup of coffee from CoffeeUrn [Kitchen-161] contains 19 cups
+      Julie drank a cup of coffee from CoffeeUrn [Kitchen-162] contains 18 cups
+      Susan drank a cup of coffee from CoffeeUrn [Kitchen-163] contains 17 cups
+      Frank drank a cup of coffee from CoffeeUrn [Kitchen-164] contains 16 cups
+</PRE>
+<!-- end of user-specified pre-formatted text -->
+<BLOCKQUOTE>
+  <BR>
+  <P>The number in brackets is the version of the state for the
+  <STRONG>CoffeeUrn</STRONG> in the kitchen.  It changes whenever anyone draws a cup
+  of coffee from it.</P>
+
+  <P>The default workers, Sam, Julie, Susan, and Frank are very fussy
+  about their coffee.  If they find the coffee urn empty too
+  frequently, they complain to the manager.  The manager will either
+  ignore the issue or promise to fix it.  If he ignores it, the
+  worker quits.</P>
+
+  <P>The program runs for approximately one minute.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_5.2"> </A>
+<H2>5.2   Initializing the datastore for the JDO reference implementation</H2>
+<BLOCKQUOTE>
+  <P>The MegaCups program is the first tool that uses data
+  objects.  The JDO reference implementation requires a one-time
+  initialization of the datastore.</P>
+
+  <P>If you see an error along the lines of "Could not login user JDO to
+  database FOStoreTestDB," then the one-time initialization is
+  required.</P>
+
+  <P>
+  In the <STRONG>build/com/ysoft/jdo/book/coffee</STRONG> directory, find the file
+  <STRONG>factory.properties</STRONG>.  In this file, find the following line,
+  which is commented out:
+  </P>
+</BLOCKQUOTE>
+<!-- User-specified pre-formatted text -->
+<PRE>
+      #com.sun.jdori.option.ConnectionCreate=true
+</PRE>
+<!-- end of user-specified pre-formatted text -->
+<BLOCKQUOTE>
+  <BR>
+  <P>Remove the comment (<STRONG>#</STRONG>) mark, save the file, and execute
+  <STRONG>runMegacups.bat</STRONG> again.  After successfully running the MegaCups
+  program, reapply the comment mark to the property file so that
+  the database will not be continually recreated.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_5.3"> </A>
+<H2>5.3   Location of the code for the MegaCups program</H2>
+<BLOCKQUOTE>
+  <P>The code for the MegaCups program is located in the
+  <STRONG>com/ysoft/jdo/book/coffee</STRONG> directory.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_6"> </A>
+<H2><U>6     The Library Program</U></H2>
+<BLOCKQUOTE>
+  <P>The Library program is an interactive tool for exercising the JDO
+  Query Language.  While not overly complex, the tool allows a rich
+  set of queries to be run against it.</P>
+
+  <P>The build target for the Library program is <STRONG>library</STRONG>.  It creates
+  a <STRONG>runLibrary.bat</STRONG> file.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_6.1"> </A>
+<H2>6.1   The data object model of the Library program</H2>
+<BLOCKQUOTE>
+  <P>There are four classes of data objects in the Library program:
+  </P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI>Book</LI>
+
+      <LI>Borrower</LI>
+
+      <LI>Volunteer</LI>
+
+      <LI>Category</LI>
+
+    </UL>
+  </BLOCKQUOTE>
+  <P>The following UML class diagram shows the relationships between
+  the data classes.</P>
+
+</BLOCKQUOTE>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<IMG 
+SRC="images/LibraryDataModel.jpg" BORDER=0 HEIGHT=270 WIDTH=379 ALT="image of Library data 
+model">
+<A NAME="Section_6.2"> </A>
+<H2>6.2   The console user interface of the Library program</H2>
+<BLOCKQUOTE>
+  <P>The console user interface comes up with a simple command line
+  prompt. The many commands are briefly explained below:</P>
+
+  <P>Commands to get started:
+  </P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI>help                  : List the various user interface commands.</LI>
+
+      <LI>quit                  : Exit the program.</LI>
+
+      <LI>populate database     : Add a default set of library objects.</LI>
+
+      <LI>clear database        : Delete all persistent library objects.</LI>
+
+      <LI>get pm config         : See the configuration (to modify, see section <A HREF="#Section_6.2.1">6.2.1</A>).</LI>
+
+    </UL>
+  </BLOCKQUOTE>
+  <P>Commands to control transactions:</P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI>begin                 : Begin the current transaction.</LI>
+
+      <LI>commit                : Commit the current transaction.</LI>
+
+      <LI>rollback              : Rollback the current transaction.</LI>
+
+    </UL>
+  </BLOCKQUOTE>
+  <P>Commands to execute queries:
+  </P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI>find all              : Find all objects of a data class (iterates the 
+      <STRONG>Extent</STRONG>).</LI>
+
+      <LI>define query variable : Define variable to be used in the next query (a one-shot 
+      setting).</LI>
+
+      <LI>define query parameter: Select a parameter to be used in the next query (a 
+      one-shot setting).</LI>
+
+      <LI>find                  : Define and execute a query.</LI>
+
+      <LI>find in results       : Execute a query on the results of the last query.</LI>
+
+      <LI>view attributes       : View the persistent field names and types for a data 
+      class.</LI>
+
+      <LI>view book             : View a book.</LI>
+
+      <LI>view borrower         : View a borrower.</LI>
+
+      <LI>view volunteer        : View a volunteer.</LI>
+
+      <LI>view category         : View a category.</LI>
+
+    </UL>
+  </BLOCKQUOTE>
+  <P>Commands to add and modify the Library's data objects:
+  </P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI>add data object       : Add a book, borrower, volunteer, or category.</LI>
+
+      <LI>delete data object    : Delete a book, borrower, volunteer, or category.</LI>
+
+      <LI>borrow book           : Have a borrower borrow a book.</LI>
+
+      <LI>return book           : Have a borrower return a book.</LI>
+
+      <LI>modify volunteer      : Modify the info on a volunteer.</LI>
+
+      <LI>modify book           : Modify the info on a book.</LI>
+
+    </UL>
+  </BLOCKQUOTE>
+</BLOCKQUOTE>
+<A NAME="Section_6.2.1"> </A>
+<H3>6.2.1 Modifying the Library program's configuration</H3>
+<BLOCKQUOTE>
+  <P>To modify the configuration of the PersistenceManager, edit the
+  <STRONG>factory.properties</STRONG> file in the 
+  <STRONG>build/com/ysoft/jdo/book/library</STRONG>
+  directory, then restart the Library program.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_6.3"> </A>
+<H2>6.3   The location of the code for the Library program</H2>
+<BLOCKQUOTE>
+  <P>The code for the Library program is located in the
+  <STRONG>com/ysoft/jdo/book/library</STRONG> directory and its subdirectories.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_7"> </A>
+<H2><U>7     The StateTracker Program</U></H2>
+<BLOCKQUOTE>
+  <P>The StateTracker program is an interactive tool to exercise the
+  JDO <STRONG>PersistenceManager</STRONG> interface.</P>
+
+  <P>The build target for the StateTracker program is
+  <STRONG>statetracker</STRONG>. It creates a <STRONG>runStatetracker.bat</STRONG> 
+  file.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_7.1"> </A>
+<H2>7.1   The data object model of the StateTracker program</H2>
+<BLOCKQUOTE>
+  <P>The StateTracker program has two classes of data objects: <STRONG>Apple</STRONG>
+  and <STRONG>Worm</STRONG>.  Apples and worms are in a n-to-m relationship.  An
+  apple can have any number of worms, and a worm can be in (or
+  perhaps eat) any number of apples.  Most of the actions of
+  StateTracker occur on apples.  Worms are there just to make sure
+  that there is a persistent field in the <STRONG>Apple</STRONG> class that is not
+  in its default fetch group.</P>
+
+  <P>The Apple has three groups of fields:
+  </P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI>persistent fields</LI>
+
+      <LI>transactional fields</LI>
+
+      <LI>unmanaged fields</LI>
+
+    </UL>
+  </BLOCKQUOTE>
+  <P>Each group of fields has the same set of attributes, where "xxx" is
+  either "persistent", "transactional", or "transient".</P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI>String  xxxName;</LI>
+
+      <LI>int     xxxSize;</LI>
+
+      <LI>Date    xxxPicked;</LI>
+
+      <LI>HashSet xxxWorms;</LI>
+
+      <LI>Worm    xxxHeadWorm;</LI>
+
+    </UL>
+  </BLOCKQUOTE>
+  <P>When adding apples, you set the properties for one set of
+  attributes.  As a convenience, the same values are assigned to all
+  three sets of attributes.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_7.2"> </A>
+<H2>7.2   The purpose of the StateTracker program</H2>
+<BLOCKQUOTE>
+  <P>The StateTracker program is designed to give you as much
+  information as possible on what JDO is doing to the apples.  You
+  can ask for the apple's JDO management state.  You can exercise a
+  broad sample of the persistence manager's methods.  You can view
+  the apple's state with JDO's transparent persistence either turned on
+  or off.  You can alter the various properties of the persistence
+  manager.  All of the methods in JDO's <STRONG>InstanceCallbacks</STRONG> interface
+  leave tracks.  Likewise, the methods in JTA's <STRONG>Synchronization</STRONG>
+  interface leave tracks.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_7.3"> </A>
+<H2>7.3   The console user interface of the StateTracker</H2>
+<BLOCKQUOTE>
+  <P>Commands to get started:</P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI>help                  : List the various user interface commands.</LI>
+
+      <LI>quit                  : Exit the program.</LI>
+
+    </UL>
+  </BLOCKQUOTE>
+  <P>Commands to control transactions:
+  </P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI>begin                 : Begin the current transaction.</LI>
+
+      <LI>commit                : Commit the current transaction.</LI>
+
+      <LI>rollback              : Rollback the current transaction.</LI>
+
+      <LI>active                : Is the current transaction active?</LI>
+
+      <LI>toss exception        : Throw an exception in the next call to the
+      <STRONG>Synchronization.beforeCompletion</STRONG> method.</LI>
+
+    </UL>
+  </BLOCKQUOTE>
+  <P>Commands to control the persistence manager:</P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI>configuration         : Check the current configuration.</LI>
+
+      <LI>configure             : Modify the current configuration.</LI>
+
+      <LI>close                 : Close the persistence manager.</LI>
+
+      <LI>is open               : Is the current persistence manager open?</LI>
+
+      <LI>open                  : Open a new persistence manager (occurs by default on 
+      startup).</LI>
+
+    </UL>
+  </BLOCKQUOTE>
+  <P>Commands to add apples and worms:
+  </P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI>add worm              : Add a worm (hint: create worms before apples).</LI>
+
+      <LI>add apple             : Add an apple.</LI>
+
+    </UL>
+  </BLOCKQUOTE>
+  <P>General commands to act on apples:</P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI>select                : Select the current apple on which all actions 
+      occur.</LI>
+
+      <LI>view                  : See the current state of the apple.  This command 
+      invokes
+      JDO's transparent persistence, if the apple is persistent.</LI>
+
+      <LI>snoop                 : See the current state of the apple.  This command 
+      <STRONG>does not</STRONG>
+      invoke JDO's transparent persistence.</LI>
+
+      <LI>find all              : Find all persistent apples.</LI>
+
+      <LI>get JDO state         : Return the current apple's JDO management state.</LI>
+
+      <LI>modify apple          : Alter the current apple's state.</LI>
+
+    </UL>
+  </BLOCKQUOTE>
+  <P>Commands to invoke persistence manager actions on the current apple:</P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI>make persistent       : Invoke the <STRONG>makePersistent</STRONG> method.</LI>
+
+      <LI>delete persistent     : Invoke the <STRONG>deletePersistent</STRONG> 
+      method.</LI>
+
+      <LI>make transactional    : Invoke the <STRONG>makeTransactional</STRONG> 
+      method.</LI>
+
+      <LI>make nontransactional : Invoke the <STRONG>makeNontransactional</STRONG> 
+      method.</LI>
+
+      <LI>make transient        : Invoke the <STRONG>makeTransient</STRONG> method.</LI>
+
+      <LI>evict                 : Invoke the <STRONG>evict</STRONG> method.</LI>
+
+      <LI>evict all             : Invoke the <STRONG>evictAll()</STRONG> method.</LI>
+
+      <LI>refresh               : Invoke the <STRONG>refresh</STRONG> method.</LI>
+
+      <LI>refresh all           : Invoke the <STRONG>refreshAll()</STRONG> method.</LI>
+
+      <LI>retrieve              : Invoke the <STRONG>retrieve</STRONG> method.</LI>
+
+      <LI>tickle default fetch group: Access a field in the default fetch group.</LI>
+
+      <LI>dirty                 : Invoke the <STRONG>makeDirty</STRONG> method in 
+      <STRONG>JDOHelper</STRONG>.</LI>
+
+    </UL>
+  </BLOCKQUOTE>
+  <P>Miscellaneous commands:
+  </P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI>delete worm           : Delete a worm</LI>
+
+    </UL>
+  </BLOCKQUOTE>
+</BLOCKQUOTE>
+<A NAME="Section_7.4"> </A>
+<H2>7.4   The location of the code for the StateTracker program</H2>
+<BLOCKQUOTE>
+  <P>The code for the StateTracker program is located in the
+  <STRONG>com/ysoft/jdo/book/statetracker</STRONG> directory and its subdirectories.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_8"> </A>
+<H2><U>8     The Rental Swing Application</U></H2>
+<BLOCKQUOTE>
+  <P>The Rental applications are three prototypes of a simple
+  reservation system.  The Rental Swing application uses JDO as the
+  local persistence service.  It uses Swing as the user interface.
+  It is an example of how to design client/server applications with
+  GUI interfaces.</P>
+
+  <P>The build target for the Rental Swing application is <STRONG>rental-gui</STRONG>.
+  It creates both a <STRONG>runRentalGui.bat</STRONG> file and a
+  <STRONG>runRentalConsole.bat</STRONG> file.  You'll want to use the
+  <STRONG>runRentalGui.bat</STRONG> file.</P>
+
+  <P>By far, this is the prettiest application in the JDO Learning Tools.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_8.1"> </A>
+<H2>8.1   Getting started with the Rental Swing application</H2>
+<BLOCKQUOTE>
+  <P>In the <STRONG>tools-home</STRONG> directory, execute the 
+  <STRONG>runRentalGui.bat</STRONG> batch
+  file.  This should bring up a Swing application that looks like the
+  following:</P>
+
+</BLOCKQUOTE>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<IMG SRC="images/RentalSwing.jpg" 
+BORDER=0 HEIGHT=308 WIDTH=600 ALT="image of Rental Swing Application">
+<BLOCKQUOTE>
+  <P>Start by pulling down the <STRONG>Connect</STRONG> menu, and selecting the
+  <STRONG>Connect to datastore</STRONG> menu item.  After a few seconds, the
+  connection should be made.</P>
+
+  <P>Next, pull down the <STRONG>File</STRONG> menu and select the <STRONG>Populate 
+  database</STRONG>
+  menu item.  This creates the testing data that you need.  This step
+  needs to be done only once, unless you blow away the testing data
+  by using the <STRONG>Clear database</STRONG> command.</P>
+
+  <P>Now, pull down the <STRONG>View</STRONG> menu and select the 
+  <STRONG>Available</STRONG> menu
+  item.  You should now see a six column table with 16 rows.</P>
+
+  <P>Without entering a customer's name, all you can do is view the
+  available rental periods.  After entering a customer's name, you
+  can make, cancel, or alter the customer's reservations.  If you are
+  using the JDO reference implementation, you can run only one
+  instance of the Rental Swing application at a time.  If you are
+  using a JDO implementation that targets a multiuser database, such
+  as any of the three commercial implementations that the JDO
+  Learning Tools currently supports, then you can run any number of
+  instances and watch them interact.</P>
+
+  <P>In case you are charmed by the lighthouse images, be advised that
+  the featured lighthouses are working lights that are not available
+  for rent.  The concept is just a small flight of fancy.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_8.2"> </A>
+<H2>8.2   The location of the Rental Swing application code</H2>
+<BLOCKQUOTE>
+  <P>The Rental Swing application's code is located in the following directories:</P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI>The <STRONG>com/ysoft/jdo/book/rental/local</STRONG> directory and its 
+      subdirectories.</LI>
+
+      <LI>The <STRONG>com/ysoft/jdo/book/rental/persistent/local</STRONG> directory.</LI>
+
+      <LI>The <STRONG>com/ysoft/jdo/book/rental/service</STRONG> directory.</LI>
+
+    </UL>
+  </BLOCKQUOTE>
+</BLOCKQUOTE>
+<A NAME="Section_9"> </A>
+<H2><U>9     The Rental Web Application</U></H2>
+<BLOCKQUOTE>
+  <P>The Rental Web application is functionally the same reservation
+  system as the Rental Swing application, except that it is based on
+  MVC design pattern using a controller servlet and JavaServer Pages.</P>
+
+  <P>This application requires that you set up Tomcat as explained in
+  sections <A HREF="#Section_2.2.2">2.2.2</A>, <A HREF="#Section_2.3.2.3">2.3.2.3</A>, and <A HREF="#Section_2.3.3">2.3.3</A>.</P>
+
+  <P>The build target for the Rental Web application is
+  <STRONG>rental-servlet-opr</STRONG>.  After building the target, you must start up
+  Tomcat.  Then open a browser on the URL <A  HREF="http://localhost:8080/rental/controller/">http://localhost:8080/rental/controller/</A>.
+  You may have configured port 8000 instead of using the default port
+  of 8080, as described in section <A HREF="#Section_2.3.3">2.3.3</A>.</P>
+
+  <P>You can open multiple browsers on the address to see a multiuser
+  configuration.  It is necessary to make sure that each browser is
+  recognized by the servlet as a separate session.  This can be
+  verified by pointing browsers to the URL <A  HREF="http://localhost:8080/rental/SessionLock.jsp">http://localhost:8080/rental/SessionLock.jsp</A>.</P>
+
+  <P>Even with the JDO reference implementation you can open multiple
+  browsers, because to JDO there is only one client, the controller
+  servlet.  This configuration would not scale in a clustered
+  environment.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_9.1"> </A>
+<H2>9.1   The location of the code for the Rental Web application</H2>
+<BLOCKQUOTE>
+  <P>The Rental Web application's code is located in the following directories:
+  </P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI>The <STRONG>com/ysoft/jdo/book/rental/servlet</STRONG> directory and its 
+      subdirectories, except
+      the <STRONG>ejb</STRONG> subdirectory.</LI>
+
+      <LI>The <STRONG>com/ysoft/jdo/book/rental/persistent/servlet</STRONG> directory</LI>
+
+      <LI>The <STRONG>com/ysoft/jdo/book/rental/service</STRONG> directory.</LI>
+
+    </UL>
+  </BLOCKQUOTE>
+</BLOCKQUOTE>
+<A NAME="Section_9.2"> </A>
+<H2>9.2   Build order dependency</H2>
+<BLOCKQUOTE>
+  <P>In the v1-0-beta-1 version, there was a build order
+  dependency.  If you built the <STRONG>rental-servlet-opr</STRONG> or
+  <STRONG>rental-servlet-ejb</STRONG> target after the<BR>
+  <STRONG>rental-gui</STRONG> target, then you needed to build the 
+  <STRONG>clean-out</STRONG> target
+  first.  The <STRONG>clean-out</STRONG> target removed incompatible versions of the data 
+  classes.
+  As of v1-0-beta-2, this build order dependency should now be handled
+  for you.</P>
+
+  <P>There are different versions of the data classes of the
+  Rental applications which show the need for different levels of "infrastructure"
+  in the data classes when using different architectures.  It remains true
+  that the versions of the Rental data classes with more infrastructure are
+  compatible with the Rental applications that require less, but not the
+  other way around.  The infrastructure increases as you move from the
+  Rental Swing application to the Rental Web application to the Rental
+  Enterprise application.</P>
+
+  <P>The fix ensures that you have a compatible version of the
+  data classes for all Rental build targets, regardless of the order
+  in which you build them.  The <STRONG>rental-servlet-opr</STRONG> and the
+  <STRONG>rental-servlet-ejb</STRONG> targets remain essentially alternative builds, since
+  both deploy jar files to Tomcat with the same name, but different contents.</P>
+
+  <P>If, in spite of the fix, you run into incompatible data classes, you will have
+  to resort to the previous workaround of cleaning out the data classes before building
+  the target of your choice.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_9.3"> </A>
+<H2>9.3   Location of b-tree data files with reference implementation</H2>
+<BLOCKQUOTE>
+  <P>If you are using the JDO reference implementation, you will need to
+  copy the files, <STRONG>FOStoreTestDB.btx</STRONG> and 
+  <STRONG>FOStoreTestDB.btd</STRONG>, to
+  Tomcat's <STRONG>bin</STRONG> directory.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_10"> </A>
+<H2><U>10    The Rental Enterprise Application</U></H2>
+<BLOCKQUOTE>
+  <P>The Rental enterprise application is very nearly the same
+  reservation system as the Rental Web application, except that the
+  servlet uses an EJB to access JDO rather than accessing it directly
+  itself.</P>
+
+  <P>This application requires that you install and configure Tomcat as
+  explained in sections <A HREF="#Section_2.2.2">2.2.2</A>, <A HREF="#Section_2.3.2.3">2.3.2.3</A>, and <A HREF="#Section_2.3.3">2.3.3</A>.  You must install
+  and configure JBoss as described in sections <A HREF="#Section_2.2.3">2.2.3</A>, <A HREF="#Section_2.3.2.3">2.3.2.3</A>, and <A HREF="#Section_2.3.4">2.3.4</A>.</P>
+
+  <P>The build target for the Rental enterprise application is
+  <STRONG>rental-servlet-ejb</STRONG>.  After building the target, you must start up
+  Tomcat, and restart JBoss.  After the containers are running, open
+  a browser on the URL <A  HREF="http://localhost:8000/rental/controller/">http://localhost:8000/rental/controller/</A>.</P>
+
+  <P>To the end user, the Rental enterprise application is indistinguishable from the
+  Rental Web application.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_10.1"> </A>
+<H2>10.1  The location of the code for the Rental enterprise application</H2>
+<BLOCKQUOTE>
+  <P>The Rental enterprise application's code is located in the
+  following directories:
+  </P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI>The <STRONG>com/ysoft/jdo/book/rental/servlet</STRONG> directory and its 
+      subdirectories, except
+      the <STRONG>opr</STRONG> subdirectory.</LI>
+
+      <LI>The <STRONG>com/ysoft/jdo/book/rental/persistent/servlet</STRONG> directory, 
+      except not the
+      <STRONG>Lighthouse.java</STRONG> and the <STRONG>persistent.jdo</STRONG> files.</LI>
+
+      <LI>The <STRONG>com/ysoft/jdo/book/rental/persistent/ejb</STRONG> directory.</LI>
+
+      <LI>The <STRONG>com/ysoft/jdo/book/rental/service</STRONG> directory.</LI>
+
+    </UL>
+  </BLOCKQUOTE>
+</BLOCKQUOTE>
+<A NAME="Section_10.2"> </A>
+<H2>10.2  Build order dependency</H2>
+<BLOCKQUOTE>
+  <P>As of the v1-0-beta-2 version, there is a build order
+  dependency.  If you build the <STRONG>rental-servlet-ejb</STRONG> target after the
+  <STRONG>rental-gui</STRONG> target or the <STRONG>rental-servlet-opr</STRONG> target, 
+  then you
+  need to build the <STRONG>clean-out</STRONG> target first.  This removes the
+  versions of the data classes that work with the Rental Swing
+  application or Rental Web application but not with the Rental
+  enterprise application.</P>
+
+  <P>On the other hand, the versions of the data classes that work with
+  the Rental enterprise application DO WORK with the Rental Swing
+  application and the Rental Web application.  For this reason, you
+  can build the targets in the following order (assuming that either
+  they have not been build before, or the <STRONG>clean-out</STRONG> target has been
+  build first.)
+  </P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI><STRONG>rental-servlet-ejb</STRONG></LI>
+
+      <LI><STRONG>rental-servlet-opr</STRONG></LI>
+
+      <LI><STRONG>rental-gui</STRONG></LI>
+
+    </UL>
+  </BLOCKQUOTE>
+</BLOCKQUOTE>
+<A NAME="Section_11"> </A>
+<H2><U>11    The QuoteServer EJB</U></H2>
+<BLOCKQUOTE>
+  <P>The QuoteServer application uses an EJB with console client.  The console client
+  uses a command line user interface.</P>
+
+  <P>The QuoteServer applications exemplify the use of JDO with various
+  types of EJBs.</P>
+
+  <P>Before building the QuoteServer, you must install and configure
+  JBoss as described in sections <A HREF="#Section_2.2.3">2.2.3</A>, <A HREF="#Section_2.3.2.3">2.3.2.3</A>, and <A HREF="#Section_2.3.4">2.3.4</A>.</P>
+
+  <P>There are five build targets for the QuoteServer application.</P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI><STRONG>sayings-stateless-cmt</STRONG></LI>
+
+      <LI><STRONG>sayings-stateless-bmt</STRONG></LI>
+
+      <LI><STRONG>sayings-stateful-cmt</STRONG></LI>
+
+      <LI><STRONG>sayings-stateful-bmt</STRONG></LI>
+
+      <LI><STRONG>sayings-entity</STRONG></LI>
+
+    </UL>
+  </BLOCKQUOTE>
+  <P>Each target builds a different type of EJB.</P>
+
+  <P>There are no build targets for the QuoteServer when using the JDO
+  reference implementation.</P>
+
+  <P>After building the QuoteServer, you must restart JBoss.  The
+  QuoteServer application does not use Tomcat.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_11.1"> </A>
+<H2>11.1  The command line interface to the QuoteServer client</H2>
+<BLOCKQUOTE>
+  <P>The same command-line client talks to all versions of the
+  QuoteServer EJB.  By executing the command <STRONG>runQuoteServer -help</STRONG>
+  from the <STRONG>tools-home</STRONG> directory, you will see the following help
+  output:
+  </P>
+</BLOCKQUOTE>
+<!-- User-specified pre-formatted text -->
+<PRE>
+      QuoteServerClient connects to the QuoteServer EJB
+         options: -loop &lt;number&gt; -sleep &lt;number&gt; [-numTx &lt;number&gt;]
+         or: -quote "quote" -source "source"
+
+         where the loop number indicates how many quotes to get,
+         the sleep number indicates the sleep before getting another quote,
+         and the numTx indicates the number of transactions.
+
+         If you provide a numTx parameter, then the client controls the
+         managed transaction and gets the loop number of quotes per transaction.
+
+         If you supply a quote, it will be added to the datastore
+</PRE>
+<!-- end of user-specified pre-formatted text -->
+<BLOCKQUOTE>
+  <P>
+  </P>
+  <P>
+  If no command-line parameters are supplied, the default parameters
+  are <STRONG>-loop 1 -sleep 0</STRONG>, which returns one quote.
+  </P>
+  <P>
+  To begin with the QuoteServer has no quotes to serve.  To add a
+  quote, use the <STRONG>-quote</STRONG> and <STRONG>-source</STRONG> parameters, for example:
+  </P>
+</BLOCKQUOTE>
+<!-- User-specified pre-formatted text -->
+<PRE>
+      runQuoteServer -quote "A stitch in time saves nine." -source "Poor Richard's Almanac"
+</PRE>
+<!-- end of user-specified pre-formatted text -->
+<BLOCKQUOTE>
+  <BR>
+  <P>When the EJB container manages transactions, specifying the -numTx
+  parameter tells the client to start a JTA transaction before
+  calling the EJB.  Before committing the transaction, the client
+  will call the bean the number of times specified in the <STRONG>-loop</STRONG>
+  parameter.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_11.2"> </A>
+<H2>11.2  The location of the QuoteServer application's code</H2>
+<BLOCKQUOTE>
+  <P>The QuoteServer application code is located in the subdirectories
+  under the <STRONG>com/ysoft/jdo/book/sayings</STRONG> directory.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_11.2.1"> </A>
+<H3>11.2.1 The location of the property files for the QuoteServer application</H3>
+<BLOCKQUOTE>
+  <P>To demonstrate the range of possibilities, the different
+  QuoteServer examples obtain a <STRONG>PersistenceManager</STRONG> in different
+  ways.  At build time, the connection properties are defined in the
+  following files:</P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI>session stateless CMT --
+      RAR service XML in the vendor directory under the
+      <STRONG>com/ysoft/jdo/book/sayings/persistent</STRONG> directory.
+      <BR><BR></LI>
+
+      <LI>session stateful  CMT --
+      Vendor specific property file in the vendor subdirectory
+      under the <STRONG>com/ysoft/jdo/book/sayings/persistent</STRONG> directory.
+      <BR><BR></LI>
+
+      <LI>session stateless BMT --
+      Vendor specific property file in the
+      <STRONG>com/ysoft/jdo/book/sayings/service/session/stateless_bmt</STRONG> directory.
+      <BR><BR></LI>
+
+      <LI>session stateful  BMT --
+      Vendor specific property file in the
+      <STRONG>com/ysoft/jdo/book/sayings/service/session/stateful_bmt</STRONG> directory.
+      <BR><BR></LI>
+
+      <LI>entity --
+      RAR service XML in the vendor directory under the
+      <STRONG>com/ysoft/jdo/book/sayings/persistent</STRONG> directory.</LI>
+
+    </UL>
+  </BLOCKQUOTE>
+</BLOCKQUOTE>
+<A NAME="Section_12"> </A>
+<H2><U>12    Supported JDO Implementations</U></H2>
+<BLOCKQUOTE>
+  <P>As of the v1-0-beta-2 version, the JDO Learning Tools
+  supports four JDO implementations.  Further information about these
+  versions can be found at the following URLS.</P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI>JDO Reference Implementation : <A HREF="http://java.sun.com/products/jdo/">http://java.sun.com/products/jdo/</A></LI>
+
+      <LI>Kodo                         : <A HREF="http://www.solarmetric.com/">http://www.solarmetric.com/</A></LI>
+
+      <LI>Lido                         : <A HREF="http://www.libelis.com/">http://www.libelis.com/</A></LI>
+
+      <LI>IntelliBO                    : <A HREF="http://www.signsoft.com/">http://www.signsoft.com/</A></LI>
+
+    </UL>
+  </BLOCKQUOTE>
+  <P>The tools have been tested with the following versions of each JDO
+  implementation.</P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI>JDO Reference Implementation : 1.0 and 1.0.1 beta</LI>
+
+      <LI>Kodo                         : 2.4.1 and 2.5.0</LI>
+
+      <LI>Lido                         : 1.3.0 and 1.4.3</LI>
+
+      <LI>IntelliBO                    : 3.1.0</LI>
+
+    </UL>
+  </BLOCKQUOTE>
+  <P>The reference implementation is a demonstration implementation.  It
+  uses a b-tree datastore.</P>
+
+  <P>The Kodo, Lido, and IntelliBO implementations all target relational
+  databases and use JDBC to connect to the database.  Some of them
+  also target other datastores.  At the time of this writing, the
+  vendors of these implementations offer free, time-limited
+  evaluation versions.</P>
+
+  <P>There are, however, far more JDO implementations available.  You are
+  encouraged to contribute build scripts to work with your favorite
+  JDO implementation.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_12.1"> </A>
+<H2>12.1  A note on testing</H2>
+<BLOCKQUOTE>
+  <P>The best that can be said is that testing is spotty.  I have used the tools
+  extensively and that use, as well as the use by others, is at the present time
+  the only testing that I am aware of.  If anyone has ideas about how testing can be
+  improved, I would love to hear about it.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_13"> </A>
+<H2><U>13    Roadmap for future versions of the JDO Learning Tools</U></H2>
+<BLOCKQUOTE>
+  <P>For the 1.x versions, the emphasis will be on improving the
+  existing tools.  Improvements in any of the following dimensions
+  are welcomed:</P>
+
+  <BLOCKQUOTE>
+    <UL>
+      <LI>Support for additional JDO implementations (both commercial
+      and open source)</LI>
+
+      <LI>Support for additional operating systems.</LI>
+
+      <LI>Support for additional open source servlet and EJB containers.</LI>
+
+      <LI>Addition of automated testing.</LI>
+
+      <LI>Fixes for bugs.</LI>
+
+      <LI>Enhancements that do not disturb documentation.</LI>
+
+      <LI>Improvements to the documentation.</LI>
+
+    </UL>
+  </BLOCKQUOTE>
+  <P>As these improvements make their way into the tools, additional 1.x
+  versions will be released.</P>
+
+  <P>Although the 2.0 release is off in the distance, the
+  emphasis is likely to be on significant improvements to the
+  existing tools and the addition of new ones.</P>
+
+</BLOCKQUOTE>
+<A NAME="Section_14"> </A>
+<H2><U>14    Change log</U></H2>
+<A NAME="Section_14.1"> </A>
+<H2>14.1  v1-0-beta-1    First release</H2>
+<A NAME="Section_14.2"> </A>
+<H2>14.2  v1-0-beta-2    Fixes</H2>
+<BLOCKQUOTE>
+  <UL>
+    <LI>Fixed "view attributes" command in Library tool</LI>
+
+    <LI>Added "define parameter" command to Library tool</LI>
+
+    <LI>Removed "javax.jdo.option.RestoreValues" from list of expected supported
+    options in TestFactory program.</LI>
+
+    <LI>Fixed the order of build issue for the Rental applications.  Building in any
+    order should now not disturb the previously built Rental applications.</LI>
+
+    <LI>Fixed the Lido TestFactory and TestJDOHelper builds for metadata issues in
+    Lido 1.4.3 B58.</LI>
+
+    <LI>Updated Kodo property files for Oracle 8.1 issue with joins with Kodo 2.5.0.
+    You have to uncomment the property UseSQL92Joins, when using Oracle 8.1 with this
+    version of Kodo.</LI>
+
+    <LI>Changes to this documentation
+    <BR></LI>
+
+  </UL>
+</BLOCKQUOTE>
+<!-- Converted by AscToHTM 4.1 - fully registered version -->
+</BODY>
+</HTML>

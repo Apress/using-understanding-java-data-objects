@@ -1,0 +1,417 @@
+<!--
+Copyright (c) 2002 Yankee Software.
+
+This file is part of the JDO Learning Tools
+
+The JDO Learning Tools is free software; you can use it, redistribute it,
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
+
+The JDO Learning Tools software is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied
+warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See
+the GNU General Public License for more details.
+
+A copy of the GPL Version 2 is contained in LICENSE.TXT in this source
+distribution.  If you cannot find LICENSE.TXT, write to the Free
+Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+02111-1307 USA or visit www.fsf.org on the web.
+
+Copyright law and the license agreement do not apply to your
+understanding of the the concepts, principles, and practices embedded
+in this code.  The purpose of the JDO Learning Tools to to help
+advance the use and understanding of Java Data Objects, the standard
+for transparent persistence for Java objects from the Java Community
+Process.
+
+Change History:
+
+Please insert a brief record of any changes made.
+
+Author            Date        Purpose
+=================+==========+===================================
+David Ezzio       09/01/02   Created
+-->
+
+<!-- This build is specific to the JDO Reference Implementation from Sun Microsystems -->
+<project name="JDO Book Examples Ant Script: subscripts specific to JDORI" default="Help" basedir=".">
+
+   <property name="enhancer.tool"   value="com.sun.jdori.enhancer.Main" />
+   <property name="jdo.jar"         value="${jdo.home}/src/jdo.jar" />
+
+   <!-- class path for JDORI 1.0 -->
+   <path id="jdoRI-path-id">
+      <pathelement location="${jdo.jar}"                        />
+      <pathelement location="${jdo.home}/src/jdori.jar"         />
+      <pathelement location="${jdo.home}/lib/btree.jar"         />
+      <pathelement location="${jdo.home}/lib/antlr.jar"         />
+      <!--
+      <pathelement location="${jdo.home}/lib/xerces.jar"        />
+      <pathelement location="${jdo.home}/lib/jta-spec1_0_1.jar" />
+      -->
+      <pathelement location="${j2ee.home}/lib/j2ee.jar"         />
+   </path>
+
+   <!-- class path for JDORI 1.0.1 -->
+   <path id="jdoRI101-path-id">
+      <pathelement location="${jdo.jar}"                        />
+      <pathelement location="${jdo.home}/src/jdori.jar"         />
+      <pathelement location="${jdo.home}/release/lib/ext/btree.jar"         />
+      <pathelement location="${jdo.home}/release/lib/ext/antlr.jar"         />
+      <!--
+      <pathelement location="${jdo.home}/release/lib/xerces.jar"        />
+      <pathelement location="${jdo.home}/release/lib/jta-spec1_0_1.jar" />
+      -->
+      <pathelement location="${j2ee.home}/lib/j2ee.jar"         />
+   </path>
+
+   <target name="Help" >
+      <echo message="This build script is not called directly.  The main script is build.xml" />
+   </target>
+
+   <target name="determine" >
+      <available property="jdo.lib.path" value="${jdo.home}/lib" file="${jdo.home}/lib/btree.jar" />
+      <available property="jdo.lib.path" value="${jdo.home}/release/lib/ext" file="${jdo.home}/release/lib/ext/btree.jar" />
+      <echo message="jdo.lib.path = ${jdo.lib.path}" />
+
+      <available property="jdo-classpath-id" value="jdoRI-path-id" file="${jdo.home}/lib/btree.jar" />
+      <available property="factory.adaptor" value="JDORIAdaptor"   file="${jdo.home}/lib/btree.jar" />
+      <available property="jdo-classpath-id" value="jdoRI101-path-id" file="${jdo.home}/release/lib/ext/btree.jar" />
+      <available property="factory.adaptor" value="JDORIAdaptor"   file="${jdo.home}/release/lib/ext/btree.jar" />
+
+      <property name="jdo.classpath"      refid="${jdo-classpath-id}"   />
+      <property name="compile.classpath"  value="${build.dir};${source.dir};${jdo.classpath};" />
+      <property name="enhance.classpath"  value="${build.dir};${jdo.classpath};" />
+      <property name="run.classpath"      value="${enhanced.dir};${build.dir};${jdo.classpath};" />
+
+      <!-- <property name="jdo.jar"            value="${jdo.home}/src/jdo.jar" /> -->
+   </target>
+
+   <target name="check" depends="determine" >
+      <condition property="ready2" >
+         <and>
+            <not>
+               <equals arg1="${jdo-classpath-id}" arg2="$${jdo-classpath-id}" />
+            </not>
+            <not>
+               <equals arg1="${enhancer.tool}" arg2="$${enhancer.tool}" />
+            </not>
+            <not>
+               <equals arg1="${j2ee.home}" arg2="$${j2ee.home}" />
+            </not>
+            <not>
+               <equals arg1="${jdo-classpath-id}" arg2="$${jdo-classpath-id}" />
+            </not>
+            <available file="${jdo.jar}"                   />
+            <available file="${jdo.home}/src/jdori.jar"    />
+            <available file="${jdo.lib.path}/antlr.jar"    />
+            <!-- <available file="${jdo.lib.path}/xerces.jar"   /> -->
+            <!-- <available file="${jdo.lib.path}/jta-spec1_0_1.jar"  /> -->
+            <available file="${jdo.lib.path}/btree.jar"    />
+         </and>
+      </condition>
+   </target>
+
+   <target name="verify" depends="check" unless="ready2" >
+      <echo message="Some property is not set properly, or JDORI install was not found or has changed" />
+      <echo message="Check: ${jdo.jar}"                           />
+      <echo message="       ${jdo.home}/src/jdori.jar"            />
+      <echo message="       ${jdo.lib.path}/antlr.jar"            />
+      <!-- <echo message="       ${jdo.lib.path}/xerces.jar"           /> -->
+      <!-- <echo message="       ${jdo.lib.path}/jta-spec1_0_1.jar"    /> -->
+      <echo message="j2ee.home: ${j2ee.home}" />
+      <echo message="compile.classpath is ${compile.classpath}" />
+      <echo message="enhance.classpath is ${enhance.classpath}" />
+      <echo message="run.classpath is ${run.classpath}" />
+      <echo message="jdo.jar is ${jdo.jar}" />
+
+      <fail message="You need to tweak jdori.properties, JDORI install, or build" />
+   </target>
+
+   <target name="common" depends="verify" >
+      <echo message="calling ${book.path}/common/build.xml" />
+      <ant antfile="${book.path}/common/build.xml" />
+   </target>
+
+   <target name="testjdohelper" depends="verify,common" >
+      <javac
+         srcdir="${source.dir}"
+         destdir="${build.dir}"
+         debug="on"
+         deprecation="on"
+         optimize="off"
+      >
+         <classpath path="${compile.classpath}" />
+         <include name="${book.path}/factory/TestJDOHelper.java" />
+      </javac>
+
+      <echo message="creating runTestJDOHelper.bat" />
+      <echo file="runTestJDOHelper.bat" >
+REM Build generated macro to run the TestJDOHelper example
+java -cp .;${run.classpath} com.ysoft.jdo.book.factory.TestJDOHelper com/ysoft/jdo/book/factory/jdori/jdori.properties
+      </echo>
+
+      <echo message="Running TestJDOHelper" />
+      <echo message="run.classpath=${run.classpath}" />
+      <java classname="com.ysoft.jdo.book.factory.TestJDOHelper"
+            classpath=".;${run.classpath}" fork="yes" failonerror="yes" >
+         <arg line="com/ysoft/jdo/book/factory/jdori/jdori.properties" />
+      </java>
+
+      <echo message="created runTestJDOHelper.bat" />
+   </target>
+
+   <target name="build-factory" depends="common" >
+      <echo message="calling ${book.path}/factory/jdori/build.xml" />
+      <ant antfile="${book.path}/factory/jdori/build.xml" />
+      <echo message="returned from ${book.path}/factory/jdori/build.xml" />
+   </target>
+
+   <target name="testfactory" depends="build-factory,common" >
+      <echo message="creating runTestFactory.bat" />
+      <echo file="runTestFactory.bat" >
+REM Build generated macro to run the TestFactory example
+java -cp ${run.classpath} com.ysoft.jdo.book.factory.client.TestFactory
+      </echo>
+
+      <echo message="running TestFactory" />
+      <echo message="run.classpath=${run.classpath}" />
+      <java classname="com.ysoft.jdo.book.factory.client.TestFactory"
+            classpath="${run.classpath}" fork="yes" failonerror="yes" />
+
+      <echo message="created runTestFactory.bat" />
+   </target>
+
+   <target name="megacups" depends="build-factory,common" >
+      <echo message="calling ${book.path}/coffee/build.xml" />
+      <ant antfile="${book.path}/coffee/build.xml" />
+      <echo message="returned from ${book.path}/coffee/build.xml" />
+      <copy file="${book.path}/coffee/jdori.properties"
+            tofile="${build.dir}/${book.path}/coffee/factory.properties"/>
+      <!-- for 1.0 -->
+      <copy file="${book.path}/coffee/coffee.jdo"
+            tofile="${build.dir}/${book.path}/coffee.jdo"/>
+      <copy file="${book.path}/coffee/coffee.jdo"
+            tofile="${enhanced.dir}/${book.path}/coffee.jdo"/>
+      <!-- for 1.0.1 -->
+      <copy file="${book.path}/coffee/coffee.jdo"
+            tofile="${build.dir}/${book.path}/coffee/package.jdo"/>
+      <copy file="${book.path}/coffee/coffee.jdo"
+            tofile="${enhanced.dir}/${book.path}/coffee/package.jdo"/>
+
+      <!-- use the enhancer tool -->
+      <java classname="${enhancer.tool}" classpath="${enhance.classpath}" fork="yes"
+            failonerror="true" >
+         <!-- uncomment the next line to see tons of output -->
+         <!-- <arg value="-v" /> -->
+         <arg line="-s ${build.dir};${jdo.jar} -d ${enhanced.dir}" />
+         <arg value="com.ysoft.jdo.book.coffee.CoffeeUrn" />
+      </java>
+
+      <echo message="creating runMegaCups.bat" />
+      <echo file="runMegaCups.bat" >
+REM Build generated macro to run the MegaCups example
+java -cp ${run.classpath} com.ysoft.jdo.book.coffee.MegaCups %1 %2 %3 %4 %5 %6 %7 %8 %9
+      </echo>
+   </target>
+
+   <target name="library" depends="build-factory,common" >
+      <echo message="calling ${book.path}/library/build.xml" />
+      <ant antfile="${book.path}/library/build.xml" />
+      <echo message="returned from ${book.path}/library/build.xml" />
+
+      <copy file="${book.path}/library/jdori/jdori.properties"
+            tofile="${build.dir}/${book.path}/library/factory.properties"/>
+      <!-- for 1.0 -->
+      <copy file="${book.path}/library/jdori/library.ri"
+            tofile="${build.dir}/${book.path}/library.jdo"/>
+      <copy file="${book.path}/library/jdori/library.ri"
+            tofile="${enhanced.dir}/${book.path}/library.jdo"/>
+      <!-- for 1.0.1 -->
+      <copy file="${book.path}/library/jdori/library.ri"
+            tofile="${build.dir}/${book.path}/library/package.jdo"/>
+      <copy file="${book.path}/library/jdori/library.ri"
+            tofile="${enhanced.dir}/${book.path}/library/package.jdo"/>
+
+      <!-- use the enhancer tool -->
+      <echo message="Enhancing the persistent classes of library" />
+      <!-- JDORI Enhancer finds the classes on the classpath and the JDO file on the source path.
+            Go figure! -->
+      <java classname="${enhancer.tool}" classpath="${enhance.classpath}" fork="yes" failonerror="true" >
+         <arg line="-s ${build.dir};${jdo.jar} -d ${enhanced.dir}" />
+         <arg value="com.ysoft.jdo.book.library.Book" />
+         <arg value="com.ysoft.jdo.book.library.Borrower" />
+         <arg value="com.ysoft.jdo.book.library.Volunteer" />
+         <arg value="com.ysoft.jdo.book.library.Category" />
+
+         <!-- uncomment next line for a lot of output - ->
+         <arg value="-v" />
+         <!- - end of comment -->
+      </java>
+
+      <echo message="creating runLibrary.bat" />
+      <echo file="runLibrary.bat" >
+REM Build generated macro to run the library example
+java -cp ${run.classpath} com.ysoft.jdo.book.library.client.Library
+      </echo>
+   </target>
+
+   <target name="statetracker" depends="build-factory,common" >
+      <echo message="calling ${book.path}/statetracker/build.xml" />
+      <ant antfile="${book.path}/statetracker/build.xml" />
+      <echo message="returned from ${book.path}/statetracker/build.xml" />
+
+      <!-- for 1.0 -->
+      <copy file="${book.path}/statetracker/jdori/statetracker.ri"
+            tofile="${build.dir}/${book.path}/statetracker.jdo"/>
+      <copy file="${book.path}/statetracker/jdori/statetracker.ri"
+            tofile="${enhanced.dir}/${book.path}/statetracker.jdo"/>
+      <!-- for 1.0.1 -->
+      <copy file="${book.path}/statetracker/jdori/statetracker.ri"
+            tofile="${build.dir}/${book.path}/statetracker/package.jdo"/>
+      <copy file="${book.path}/statetracker/jdori/statetracker.ri"
+            tofile="${enhanced.dir}/${book.path}/statetracker/package.jdo"/>
+
+      <!-- use the enhancer tool -->
+      <echo message="enhance.classpath = ${enhance.classpath}" />
+      <java classname="${enhancer.tool}" classpath="${enhance.classpath}" fork="yes" failonerror="true" >
+         <!-- uncomment the next line to see tons of output -->
+         <!-- <arg value="-v" /> -->
+         <arg line="-s ${build.dir};${jdo.jar} -d ${enhanced.dir}" />
+         <arg value="com.ysoft.jdo.book.statetracker.Apple" />
+         <arg value="com.ysoft.jdo.book.statetracker.Worm" />
+      </java>
+
+
+      <echo message="creating runStatetracker.bat" />
+      <echo file="runStatetracker.bat" >
+REM Build generated macro to run the statetracker example
+REM
+REM Without a command line parameter, this test uses the JDORI
+REM    adaptor in the com.ysoft.jdo.book.factory.ri.JDORIAdaptor
+REM    class.  To override, specify as a command line argument,
+REM    the adaptor class desired.
+REM
+java -cp ${run.classpath} com.ysoft.jdo.book.statetracker.client.StateTracker %1
+      </echo>
+   </target>
+
+   <target name="rental-gui" depends="build-factory,common" >
+      <echo message="calling ${book.path}/rental/local/build.xml" />
+      <ant antfile="${book.path}/rental/local/build.xml" />
+      <echo message="returned from ${book.path}/rental/local/build.xml" />
+      <copy file="${book.path}/rental/local/jdori.properties"
+            tofile="${build.dir}/${book.path}/rental/persistent/factory.properties"/>
+
+      <!-- for 1.0 -->
+      <copy file="${book.path}/rental/persistent/local/persistent.jdo"
+            tofile="${build.dir}/${book.path}/rental/persistent.jdo"/>
+      <copy file="${book.path}/rental/persistent/local/persistent.jdo"
+            tofile="${enhanced.dir}/${book.path}/rental/persistent.jdo"/>
+      <!-- for 1.0.1 -->
+      <copy file="${book.path}/rental/persistent/local/persistent.jdo"
+            tofile="${build.dir}/${book.path}/rental/persistent/package.jdo"/>
+      <copy file="${book.path}/rental/persistent/local/persistent.jdo"
+            tofile="${enhanced.dir}/${book.path}/rental/persistent/package.jdo"/>
+
+      <!-- use the enhancer tool -->
+      <java classname="${enhancer.tool}" classpath="${enhance.classpath}" fork="yes"
+            failonerror="true" >
+         <!-- uncomment the next line to see tons of output -->
+         <!-- <arg value="-v" /> -->
+         <arg line="-s ${build.dir};${jdo.jar} -d ${enhanced.dir}" />
+         <arg value="com.ysoft.jdo.book.rental.persistent.Rental" />
+         <arg value="com.ysoft.jdo.book.rental.persistent.Customer" />
+         <arg value="com.ysoft.jdo.book.rental.persistent.Lighthouse" />
+         <arg value="com.ysoft.jdo.book.rental.persistent.Week" />
+      </java>
+
+      <echo message="creating runRentalConsole.bat" />
+      <echo file="runRentalConsole.bat" >
+REM Build generated macro to run the RentalConsole example
+java -cp ${run.classpath} com.ysoft.jdo.book.rental.local.client.console.ReservationClient
+      </echo>
+
+      <echo message="creating runRentalGui.bat" />
+      <echo file="runRentalGui.bat" >
+REM Build generated macro to run the RentalGui example
+java -cp ${run.classpath} com.ysoft.jdo.book.rental.local.client.gui.ReservationClient %1 %2
+      </echo>
+   </target>
+
+   <target name="setup-warfiles" >
+      <!-- delete the files in the warfiles directory -->
+      <delete includeEmptyDirs="true" >
+         <fileset dir="warfiles">
+            <patternset>
+               <!-- a bit dangerous, but does the job -->
+               <include name="**/*" />
+               <exclude name="keepme.txt" />
+            </patternset>
+         </fileset>
+      </delete>
+
+      <copy todir="warfiles/WEB-INF/lib" >
+         <fileset dir="${jdo.home}/src" >
+            <patternset>
+               <include name="jdo.jar" />
+               <include name="jdori.jar" />
+            </patternset>
+         </fileset>
+      </copy>
+
+      <copy todir="warfiles/WEB-INF/lib" >
+         <fileset dir="${jdo.lib.path}" >
+            <patternset>
+               <include name="btree.jar" />
+               <include name="antlr.jar" />
+               <!-- <include name="xerces.jar" /> -->
+               <!-- <include name="jta-spec1_0_1.jar" /> -->
+            </patternset>
+         </fileset>
+      </copy>
+
+      <!-- to get the oracle zip working with tomcat, I had to unzip it and then jar it, then
+           deploy it to tomcat/shared/lib.  After that, it worked fine. -->
+   </target>
+
+   <target name="rental-servlet" depends="verify,common,setup-warfiles" >
+      <echo message="calling ${book.path}/rental/servlet/build.xml" />
+      <ant antfile="${book.path}/rental/servlet/build.xml" target="rental-servlet"/>
+      <echo message="returned from ${book.path}/rental/servlet/build.xml" />
+
+      <!-- for 1.0 -->
+      <copy file="${book.path}/rental/persistent/servlet/persistent.jdo"
+            tofile="${build.dir}/${book.path}/rental/persistent.jdo"/>
+      <copy file="${book.path}/rental/persistent/servlet/persistent.jdo"
+            tofile="${enhanced.dir}/${book.path}/rental/persistent.jdo"/>
+      <!-- for 1.0.1 -->
+      <copy file="${book.path}/rental/persistent/servlet/persistent.jdo"
+            tofile="${build.dir}/${book.path}/rental/persistent/package.jdo"/>
+      <copy file="${book.path}/rental/persistent/servlet/persistent.jdo"
+            tofile="${enhanced.dir}/${book.path}/rental/persistent/package.jdo"/>
+
+      <!-- use the enhancer tool -->
+      <java classname="${enhancer.tool}" classpath="${enhance.classpath}" fork="yes"
+            failonerror="true" >
+         <!-- uncomment the next line to see tons of output -->
+         <!-- <arg value="-v" /> -->
+         <arg line="-s ${build.dir};${jdo.jar} -d ${enhanced.dir}" />
+         <arg value="com.ysoft.jdo.book.rental.persistent.Rental" />
+         <arg value="com.ysoft.jdo.book.rental.persistent.Customer" />
+         <arg value="com.ysoft.jdo.book.rental.persistent.Lighthouse" />
+         <arg value="com.ysoft.jdo.book.rental.persistent.Week" />
+      </java>
+
+      <ant antfile="bookants/tomcat.xml" target="rental-servlet" >
+      </ant>
+   </target>
+
+   <target name="rental-servlet-opr" depends="verify,common" >
+      <antcall target="rental-servlet">
+         <param name="servlet-design" value="opr" />
+      </antcall>
+   </target>
+
+</project>

@@ -1,0 +1,64 @@
+<project name="JDO Book Examples Ant Script for Factory package" default="factory" basedir=".">
+
+   <target name="all-variables-defined" >
+      <condition property="factory-ready" >
+         <not><or>
+            <equals arg1="${source.dir}"        arg2="$${source.dir}" />
+            <equals arg1="${build.dir}"         arg2="$${build.dir}" />
+            <equals arg1="${enhanced.dir}"      arg2="$${enhanced.dir}" />
+            <equals arg1="${compile.classpath}" arg2="$${compile.classpath}" />
+            <equals arg1="${book.path}"         arg2="$${book.path}" />
+         <!--
+            <equals arg1="${factory.adaptor}"   arg2="$${factory.adaptor}" />
+         -->
+         </or></not>
+      </condition>
+   </target>
+
+   <target name="verify" depends="all-variables-defined" unless="factory-ready" >
+      <echo message="A build variable is not defined" />
+      <echo message="   Check ${source.dir}, ${build.dir}, ${enhanced.dir}" />
+      <echo message="   Check ${book.path}" />
+      <echo message="   Check ${compile.classpath}" />
+      <fail message="A build variable is not defined" />
+   </target>
+
+   <target name="factory2" if="factory.adaptor2" >
+      <javac
+         srcdir="${source.dir}"
+         destdir="${build.dir}"
+         debug="on"
+         deprecation="on"
+         optimize="off"
+      >
+         <classpath path="${compile.classpath}" />
+         <include name="${book.path}/factory/kodo/${factory.adaptor2}.java" />
+      </javac>
+   </target>
+
+   <target name="factory" depends="verify" >
+      <javac
+         srcdir="${source.dir}"
+         destdir="${build.dir}"
+         debug="on"
+         deprecation="on"
+         optimize="off"
+      >
+         <classpath path="${compile.classpath}" />
+         <include name="${book.path}/factory/kodo/JDOKodoSEAdaptor.java" />
+         <include name="${book.path}/factory/*.java" />
+         <include name="${book.path}/factory/client/*.java" />
+      </javac>
+
+      <copy todir="${enhanced.dir}" >
+         <fileset dir="${source.dir}" >
+            <patternset >
+               <include name="${book.path}/factory/*.properties" />
+            </patternset>
+         </fileset>
+      </copy>
+
+      <antcall target="factory2" />
+   </target>
+
+</project>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<server>
+   <mbean code="org.jboss.resource.connectionmanager.XATxConnectionManager"
+         name="jboss.jca:service=XaTxCM,name=lido">
+
+      <!--make the rar deploy! hack till better deployment-->
+      <depends>jboss.jca:service=RARDeployer</depends>
+
+      <depends optional-attribute-name="ManagedConnectionFactoryName">
+         <!--embedded mbean-->
+         <mbean code="org.jboss.resource.connectionmanager.RARDeployment"
+               name="jboss.jca:service=XaTxDS,name=lido">
+            <!--hack-->
+            <depends optional-attribute-name="OldRarDeployment">
+                  jboss.jca:service=RARDeployment,name=LiDO
+            </depends>
+
+            <!--real attributes-->
+            <attribute name="ManagedConnectionFactoryProperties">
+               <properties>
+                  <config-property>
+                     <config-property-name>ConnectionDriverName</config-property-name>
+                     <config-property-type>java.lang.String</config-property-type>
+                     <config-property-value>oracle.jdbc.driver.OracleDriver</config-property-value>
+                  </config-property>
+                  <config-property>
+                     <config-property-name>ConnectionURL</config-property-name>
+                     <config-property-type>java.lang.String</config-property-type>
+                     <config-property-value>
+                        jdbc:oracle:thin:@ysoftlaptop:1521:OAK
+                     </config-property-value>
+                  </config-property>
+                  <config-property>
+                     <config-property-name>ConnectionPassword</config-property-name>
+                     <config-property-type>java.lang.String</config-property-type>
+                     <config-property-value>lido</config-property-value>
+                  </config-property>
+                  <config-property>
+                     <config-property-name>ConnectionUserName</config-property-name>
+                     <config-property-type>java.lang.String</config-property-type>
+                     <config-property-value>lido</config-property-value>
+                  </config-property>
+<!-- Lido's (1.3.0 B4) JDOManagedConnectionFactory does not accept any of these property names
+                  <config-property>
+                     <config-property-name>Optimistic</config-property-name>
+                     <config-property-type>boolean</config-property-type>
+                     <config-property-value>true</config-property-value>
+                  </config-property>
+                  <config-property>
+                     <config-property-name>RetainValues</config-property-name>
+                     <config-property-type>boolean</config-property-type>
+                     <config-property-value>false</config-property-value>
+                  </config-property>
+                  <config-property>
+                     <config-property-name>RestoreValues</config-property-name>
+                     <config-property-type>boolean</config-property-type>
+                     <config-property-value>false</config-property-value>
+                  </config-property>
+                  <config-property>
+                     <config-property-name>NontransactionalRead</config-property-name>
+                     <config-property-type>boolean</config-property-type>
+                     <config-property-value>true</config-property-value>
+                  </config-property>
+                  <config-property>
+                     <config-property-name>NontransactionalWrite</config-property-name>
+                     <config-property-type>boolean</config-property-type>
+                     <config-property-value>false</config-property-value>
+                  </config-property>
+-->
+               </properties>
+            </attribute>
+            <attribute name="JndiName">jdoCF</attribute>
+         </mbean>
+      </depends>
+      <depends optional-attribute-name="ManagedConnectionPool">
+         <mbean code="org.jboss.resource.connectionmanager.JBossManagedConnectionPool"
+               name="jboss.jca:service=XaTxPool,name=lido">
+            <attribute name="MinSize">0</attribute>
+            <attribute name="MaxSize">10</attribute>
+            <attribute name="BlockingTimeoutMillis">1000</attribute>
+            <attribute name="IdleTimeoutMinutes">1</attribute>
+            <attribute name="Criteria">ByContainer</attribute>
+         </mbean>
+      </depends>
+      <depends optional-attribute-name="CachedConnectionManager">
+            jboss.jca:service=CachedConnectionManager
+      </depends>
+
+<!--
+      <depends optional-attribute-name="JaasSecurityManagerService">
+            jboss.security:name=JaasSecurityManager
+      </depends>
+-->
+
+      <attribute name="TransactionManager">java:/TransactionManager</attribute>
+   </mbean>
+</server>
+

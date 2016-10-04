@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jdo PUBLIC "-//Sun Microsystems, Inc.//DTD Java Data Objects Metadata 1.0//EN"
+         "http://java.sun.com/dtd/jdo_1_0.dtd">
+<jdo>
+   <package name="com.ysoft.jdo.book.statetracker">
+      <class identity-type="datastore" name="Apple">
+         <field name="transientWorms" persistence-modifier="none"/>
+         <field name="transientSize" persistence-modifier="none"/>
+         <field name="transientPicked" persistence-modifier="none"/>
+         <field name="transientName" persistence-modifier="none"/>
+         <field name="transientHeadWorm" persistence-modifier="none"/>
+
+         <field name="transactionalWorms" persistence-modifier="transactional">
+            <collection element-type="com.ysoft.jdo.book.statetracker.Worm"/>
+         </field>
+         <field name="transactionalSize" persistence-modifier="transactional"/>
+         <field name="transactionalPicked" persistence-modifier="transactional"/>
+         <field name="transactionalName" persistence-modifier="transactional"/>
+         <field name="transactionalHeadWorm" persistence-modifier="transactional"/>
+
+         <field name="persistentWorms" persistence-modifier="persistent">
+            <collection element-type="com.ysoft.jdo.book.statetracker.Worm"/>
+            <extension key="jdbc" vendor-name="ssibo">
+               <extension key="mapping" value="many-to-many" vendor-name="ssibo"/>
+            </extension>
+         </field>
+         <field name="persistentSize" persistence-modifier="persistent"/>
+         <field name="persistentPicked" persistence-modifier="persistent"/>
+         <field name="persistentName" persistence-modifier="persistent"/>
+         <field name="persistentHeadWorm" persistence-modifier="persistent"/>
+
+         <field name="monitor" persistence-modifier="none"/>
+         <field name="OIDString" persistence-modifier="none"/>
+
+         <extension key="jdbc" vendor-name="ssibo">
+            <extension key="optimistic-lock" vendor-name="ssibo">
+               <extension key="provider" value="default" vendor-name="ssibo"/>
+            </extension>
+         </extension>
+      </class>
+
+      <class identity-type="datastore" name="Worm">
+         <field name="name" persistence-modifier="persistent"/>
+         <field name="OIDString" persistence-modifier="none"/>
+         <extension key="jdbc" vendor-name="ssibo">
+            <extension key="optimistic-lock" vendor-name="ssibo">
+               <extension key="provider" value="default" vendor-name="ssibo"/>
+            </extension>
+         </extension>
+      </class>
+   </package>
+</jdo>

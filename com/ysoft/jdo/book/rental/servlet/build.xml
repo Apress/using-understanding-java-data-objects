@@ -1,0 +1,67 @@
+<project name="JDO Book Examples Ant Script for rental.servlet package" default="fail" basedir=".">
+
+   <target name="fail" >
+      <fail message="Target must be specified" />
+   </target>
+
+   <target name="all-variables-defined" >
+      <condition property="dream-ready" >
+         <not><or>
+            <equals arg1="${source.dir}"        arg2="$${source.dir}" />
+            <equals arg1="${build.dir}"         arg2="$${build.dir}" />
+            <equals arg1="${compile.classpath}" arg2="$${compile.classpath}" />
+            <equals arg1="${book.path}"         arg2="$${book.path}" />
+         </or></not>
+      </condition>
+   </target>
+
+   <target name="verify" depends="all-variables-defined" unless="dream-ready" >
+      <echo message="A build variable is not defined" />
+      <echo message="   Check ${source.dir}, ${build.dir}" />
+      <echo message="   Check ${book.path}" />
+      <echo message="   Check ${compile.classpath}" />
+      <fail message="A build variable is not defined" />
+   </target>
+
+   <target name="rental-servlet" description="Build rental servlet examples" depends="verify" >
+      <!-- do copy first so that javac can detect matching class files -->
+      <copy todir="${book.path}/rental/persistent" preservelastmodified="yes" >
+         <fileset dir="${book.path}/rental/persistent/servlet" >
+            <patternset >
+               <include name="*.java" />
+            </patternset>
+         </fileset>
+      </copy>
+
+      <!-- to prevent problems with multiple versions always compile and enhance these files -->
+      <delete failonerror="no">
+         <fileset dir="${build.dir}/${book.path}/rental/persistent" includes="*.class"/>
+      </delete> 
+
+      <javac
+         srcdir="${source.dir}"
+         destdir="${build.dir}"
+         debug="on"
+         deprecation="on"
+         optimize="off"
+      >
+         <classpath path="${compile.classpath}" />
+         <include name="${book.path}/rental/persistent/*.java" />
+         <include name="${book.path}/rental/service/*.java" />
+         <include name="${book.path}/rental/servlet/service/*.java" />
+         <include name="${book.path}/rental/servlet/util/*.java" />
+         <include name="${book.path}/rental/servlet/beans/*.java" />
+         <include name="${book.path}/rental/servlet/opr/*.java" />
+      </javac>
+
+      <!-- now rename the source file in the temp location so user will not edit -->
+      <move todir="${book.path}/rental/persistent" >
+         <fileset dir="${book.path}/rental/persistent" >
+            <include name="*.java"/>
+         </fileset>
+         <mapper type="glob" from="*.java" to="*.tmp"/>
+      </move>
+   </target>
+
+</project>
+

@@ -1,0 +1,180 @@
+<!--
+Copyright (c) 2002 Yankee Software.
+
+This file is part of the JDO Learning Tools
+
+The JDO Learning Tools is free software; you can use it, redistribute it,
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
+
+The JDO Learning Tools software is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied
+warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See
+the GNU General Public License for more details.
+
+A copy of the GPL Version 2 is contained in LICENSE.TXT in this source
+distribution.  If you cannot find LICENSE.TXT, write to the Free
+Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+02111-1307 USA or visit www.fsf.org on the web.
+
+Copyright law and the license agreement do not apply to your
+understanding of the the concepts, principles, and practices embedded
+in this code.  The purpose of the JDO Learning Tools to to help
+advance the use and understanding of Java Data Objects, the standard
+for transparent persistence for Java objects from the Java Community
+Process.
+
+Change History:
+
+Please insert a brief record of any changes made.
+
+Author            Date        Purpose
+=================+==========+===================================
+David Ezzio       09/01/02   Created
+-->
+
+<!-- This build is specific to the Tomcat 4.0 Servlet container -->
+<project name="JDO Book Examples Ant Script: subscripts specific to Tomcat" default="Help" basedir=".">
+
+   <fileset dir="${build.dir}" id="build-fileset-servlet" >
+      <include name="${book.path}/common/exceptions/*.class" />
+      <include name="${book.path}/common/*.class" />
+      <include name="${book.path}/rental/service/*.class" />
+      <include name="${book.path}/rental/servlet/service/*.class" />
+      <include name="${book.path}/rental/servlet/util/*.class" />
+      <include name="${book.path}/rental/servlet/beans/*.class" />
+      <include name="${book.path}/rental/servlet/${servlet-design}/*.class" />
+   </fileset>
+   <fileset dir="${enhanced.dir}" id="enhanced-fileset-servlet" >
+      <include name="${book.path}/rental/**/*" />
+      <exclude name="${book.path}/rental/**/*.txt" />
+   </fileset>
+
+   <fileset dir="${build.dir}" id="build-fileset-ejb" >
+      <include name="${book.path}/rental/servlet/util/*.class" />
+      <include name="${book.path}/rental/servlet/${servlet-design}/*.class" />
+   </fileset>
+   <fileset dir="${enhanced.dir}" id="enhanced-fileset-ejb" >
+      <include name="none" />
+   </fileset>
+
+   <target name="Help" >
+      <echo message="This build script is not called directly.  The main script is build.xml" />
+   </target>
+
+   <target name="find-Tomcat" >
+      <echo message="checking: ${tomcat.home}/server/lib/tomcat-util.jar" />
+      <available property="found.Tomcat" file="${tomcat.home}/server/lib/tomcat-util.jar" />
+   </target>
+
+   <target name="die-without-Tomcat" depends="find-Tomcat" unless="found.Tomcat" >
+      <fail message="Tomcat is not installed or default.properties is not configured" />
+   </target>
+
+   <target name="rental" depends="die-without-Tomcat" >
+      <echo message="Building war file for servlet design: ${servlet-design}" />
+
+      <echo message="Shutting down tomcat" />
+      <exec dir="${tomcat.home}/bin" executable="cmd.exe" >
+         <arg line="/c shutdown.bat"/>
+      </exec>
+
+      <!-- construct the directory structure in warfiles -->
+      <copy todir="warfiles" >
+         <fileset dir="${book.path}/rental/servlet/jsp">
+            <include name="*.jsp" />
+         </fileset>
+      </copy>
+      <mkdir dir="warfiles/WEB-INF" />
+      <copy todir="warfiles/WEB-INF" >
+         <fileset dir="${book.path}/rental/servlet/misc">
+            <include name="web.xml" />
+            <include name="c.tld" />
+         </fileset>
+         <fileset dir="temp" >
+            <include name="jndi.properties" />
+         </fileset>
+      </copy>
+
+      <replace file="warfiles/WEB-INF/web.xml" token="{ANT-VAR}" value="${servlet-design}" />
+
+      <mkdir dir="warfiles/WEB-INF/classes" />
+      <copy todir="warfiles/WEB-INF/classes" >
+         <fileset refid="${build-fileset}" />
+         <fileset refid="${enhanced-fileset}" />
+      </copy>
+
+      <copy todir="warfiles/WEB-INF/classes/${book.path}/rental/servlet/service" >
+         <mapper type="glob" from="${jdo.tool}*.properties" to="factory*.properties" />
+         <fileset dir="${book.path}/rental/servlet/${servlet-design}" >
+            <include name="${jdo.tool}*.properties" />
+         </fileset>
+      </copy>
+
+      <copy file="${book.path}/common/servlet/package.properties"
+            tofile="warfiles/WEB-INF/classes/${book.path}/common/package.properties" />
+
+      <mkdir dir="warfiles/images" />
+      <copy todir="warfiles/images" >
+         <fileset dir="images" >
+            <include name="*.jpg" />
+         </fileset>
+      </copy>
+
+      <!-- pick up EJB client jars that may be here -->
+      <copy todir="warfiles/web-inf/lib" >
+         <fileset dir="temp" includes="*.jar" />
+      </copy>
+      <delete>
+         <fileset dir="temp" >
+            <patternset>
+               <include name="*.*"/>
+               <exclude name="keepme.txt" />
+            </patternset>
+         </fileset>
+      </delete>
+
+      <!-- sleep long enough for shutdown of Tomcat to take place -->
+      <sleep seconds="10" />
+
+      <delete includeEmptyDirs="true" >
+         <fileset dir="${tomcat.home}/webapps/rental" >
+            <patternset >
+               <!-- a bit dangerous, but does the job -->
+               <include name="**/*" />
+               <!-- tomcat will not shut down fast enough to allow erasing the jars
+               <exclude name="**/*.jar" />
+               -->
+            </patternset>
+         </fileset>
+      </delete>
+
+      <mkdir dir="${tomcat.home}/webapps/rental" />
+      <copy todir="${tomcat.home}/webapps/rental" >
+         <fileset dir="warfiles">
+            <include name="**/*" />
+         </fileset>
+      </copy>
+
+      <echo message="You'll have to restart Tomcat" />
+   </target>
+
+   <target name="rental-servlet" >
+      <property name="build-fileset" value="build-fileset-servlet" />
+      <property name="enhanced-fileset" value="enhanced-fileset-servlet" />
+      <antcall target="rental" />
+   </target>
+
+   <target name="rental-servlet-ejb" >
+      <copy todir="temp" file="clientjars/reservationclient.jar" />
+      <copy todir="temp" file="resources/jndi.properties" />
+      <!-- <echo message="In tomcat.xml:rental-servlet-ejb" /> -->
+      <property name="build-fileset" value="build-fileset-ejb" />
+      <property name="enhanced-fileset" value="enhanced-fileset-ejb" />
+      <antcall target="rental" />
+   </target>
+
+</project>
+
+

@@ -1,0 +1,143 @@
+<project name="JDO Book Examples Ant Script for sayings package" default="Help" basedir=".">
+
+   <target name="Help" >
+      <echo message="This build file is not called directly" />
+   </target>
+
+   <target name="all-variables-defined" >
+      <condition property="sayings-ready" >
+         <not><or>
+            <equals arg1="${source.dir}"        arg2="$${source.dir}" />
+            <equals arg1="${build.dir}"         arg2="$${build.dir}" />
+            <equals arg1="${compile.classpath}" arg2="$${compile.classpath}" />
+            <equals arg1="${book.path}"         arg2="$${book.path}" />
+         </or></not>
+      </condition>
+   </target>
+
+   <target name="verify" depends="all-variables-defined" unless="sayings-ready" >
+      <echo message="A build variable is not defined" />
+      <echo message="   Check ${source.dir}, ${build.dir}" />
+      <echo message="   Check ${book.path}" />
+      <echo message="   Check ${compile.classpath}" />
+      <fail message="A build variable is not defined" />
+   </target>
+
+   <target name="sayings" depends="verify" >
+      <condition property="cpath" value="${bean-type}/${ejb.subpackage}" >
+         <not>
+            <equals arg1="${ejb.subpackage}" arg2="." />
+         </not>
+      </condition>
+      <property name="cpath" value="${bean-type}" />
+      <echo message="compiling: ${book.path}/sayings/service/${cpath}/*.java" />
+
+      <javac
+         srcdir="${source.dir}"
+         destdir="${build.dir}"
+         debug="on"
+         deprecation="on"
+         optimize="off"
+      >
+         <classpath path="${compile.classpath}" />
+         <include name="${book.path}/sayings/persistent/*.java" />
+         <include name="${book.path}/sayings/service/*.java" />
+         <!-- since the client works with either session or entity beans it needs both sets of interfaces -->
+         <include name="${book.path}/sayings/service/session/*.java" />
+         <include name="${book.path}/sayings/service/entity/QuoteServerHome.java" />
+         <include name="${book.path}/sayings/service/entity/QuoteServerRemote.java" />
+         <include name="${book.path}/sayings/service/${cpath}/*.java" />
+         <include name="${book.path}/sayings/client/*.java" />
+      </javac>
+
+      <copy todir="${build.dir}/${book.path}/sayings/service/${bean-type}" overwrite="yes" >
+         <fileset dir="${book.path}/sayings/service/${bean-type}/${ejb.subpackage}" >
+            <patternset>
+               <include name="*.xml" />
+            </patternset>
+         </fileset>
+      </copy>
+   </target>
+
+   <target name="sayings-ejb" depends="verify" >
+      <delete >
+         <fileset dir="${source.dir}" >
+            <patternset >
+               <include name="serverjars/quoteserver.jar" />
+               <include name="clientjars/quoteserverclient.jar" />
+            </patternset>
+         </fileset>
+      </delete>
+
+      <!-- strip out the document URI, before putting JDO metadat into server jar -->
+      <available property="jdoxml2" value="${book.path}/sayings/persistent/persistent.jdo"
+            file="${enhanced.dir}/${book.path}/sayings/persistent/persistent.jdo" />
+      <available property="jdoxml2" value="${book.path}/sayings/persistent.jdo"
+            file="${enhanced.dir}/${book.path}/sayings/persistent.jdo" />
+      <available property="jdoxml2" value="metadata.jdo" file="${enhanced.dir}/metadata.jdo" />
+      <replace file="${enhanced.dir}/${jdoxml2}" token='"jdo.dtd"' value='"file:/${jboss.home}/jdo.dtd"' />
+      <copy file="resources/jdo.dtd" todir="${jboss.home}"/>
+      <copy file="${factory-properties}"
+            tofile="${build.dir}/${book.path}/sayings/service/factory.properties"
+            overwrite="yes" />
+
+      <jar jarfile="serverjars/quoteserver.jar" update="yes" >
+         <metainf dir="${build.dir}/${book.path}/sayings/service/${bean-type}" >
+            <patternset >
+               <include name="*.xml" />
+            </patternset>
+         </metainf>
+         <fileset dir="${build.dir}" >
+            <patternset >
+               <include name="${book.path}/sayings/service/${bean-type}/*.class" />
+               <include name="${book.path}/sayings/service/*.class" />
+               <include name="${book.path}/sayings/service/factory.properties" />
+               <include name="${book.path}/common/*.class" />
+               <exclude name="${book.path}/common/ServletLogger.class" />
+               <include name="${book.path}/common/exceptions/*.class" />
+               <include name="${book.path}/common/ejb/*.class" />
+               <include name="${book.path}/factory/Jndi*.class" />
+               <include name="${book.path}/factory/JDOFactory*.class" />
+            </patternset>
+         </fileset>
+         <fileset dir="${enhanced.dir}" >
+            <patternset >
+               <include name="${book.path}/sayings/persistent/*.class" />
+               <include name="${jdoxml2}" />
+            </patternset>
+         </fileset>
+         <fileset dir="${source.dir}" >
+            <patternset >
+               <include name="${book.path}/common/package.properties" />
+            </patternset>
+         </fileset>
+      </jar>
+
+      <jar jarfile="clientjars/quoteserverclient.jar" update="yes">
+         <fileset dir="${build.dir}" >
+            <patternset >
+               <exclude name="${book.path}/sayings/service/**/*EJB.class" />
+               <include name="${book.path}/sayings/service/session/*.class" />
+               <include name="${book.path}/sayings/service/entity/*.class" />
+               <include name="${book.path}/sayings/service/*.class" />
+               <include name="${book.path}/common/*.class" />
+               <include name="${book.path}/common/exceptions/*.class" />
+               <include name="${book.path}/sayings/client/*.class" />
+            </patternset>
+         </fileset>
+         <fileset dir="${enhanced.dir}" >
+            <patternset >
+               <!-- Note that client is using enhanced application data class files -->
+               <include name="${book.path}/sayings/persistent/*.class" />
+            </patternset>
+         </fileset>
+         <fileset dir="resources" >
+            <patternset >
+               <include name="jndi.properties" />
+            </patternset>
+         </fileset>
+      </jar>
+   </target>
+
+</project>
+

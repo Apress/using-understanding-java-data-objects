@@ -1,0 +1,1 @@
+The client jars files for the ejb examples are placed in the clientjars directory

@@ -1,0 +1,553 @@
+<!--
+Copyright (c) 2002 Yankee Software.
+
+This file is part of the JDO Learning Tools
+
+The JDO Learning Tools is free software; you can use it, redistribute it,
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
+
+The JDO Learning Tools software is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied
+warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See
+the GNU General Public License for more details.
+
+A copy of the GPL Version 2 is contained in LICENSE.TXT in this source
+distribution.  If you cannot find LICENSE.TXT, write to the Free
+Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+02111-1307 USA or visit www.fsf.org on the web.
+
+Copyright law and the license agreement do not apply to your
+understanding of the the concepts, principles, and practices embedded
+in this code.  The purpose of the JDO Learning Tools to to help
+advance the use and understanding of Java Data Objects, the standard
+for transparent persistence for Java objects from the Java Community
+Process.
+
+Change History:
+
+Please insert a brief record of any changes made.
+
+Author            Date        Purpose
+=================+==========+===================================
+David Ezzio       09/01/02   Created
+-->
+
+<!-- This build is specific to the Kodo JDO implementation from SolarMetric -->
+<project name="JDO Book Examples Ant Script: subscripts specific to Kodo" default="Help" basedir=".">
+
+   <property name="enhancer.tool" value="com.solarmetric.kodo.enhance.JDOEnhancer" />
+   <property name="meta.data.verifier"
+         value="com.solarmetric.kodo.impl.jdbc.ormapping.MetaDataVerifier" />
+   <property name="schema.tool" value="com.solarmetric.kodo.impl.jdbc.schema.SchemaTool" />
+
+   <!-- class path if Kodo SE is used -->
+   <path id="kodoSE-path-id">
+      <pathelement location="${jdbc.jar}"                         />
+      <pathelement location="${jdo.home}"                         />
+      <pathelement location="${jdo.home}/lib/xerces.jar"          />
+      <pathelement location="${jdo.home}/lib/jaxp.jar"            />
+      <pathelement location="${jdo.home}/lib/jdo1_0.jar"          />
+      <pathelement location="${jdo.home}/lib/jta-spec1_0_1.jar"   />
+      <pathelement location="${jdo.home}/lib/kodo-jdo.jar"        />
+      <pathelement location="${jdo.home}/lib/jdbc2_0-stdext.jar"  />
+      <pathelement location="${jdo.home}/lib/serp.jar"            />
+      <pathelement location="${jdo.home}/lib/jakarta-commons-logging-1.0.2.jar"  />
+      <pathelement location="${jdo.home}/lib/jakarta-commons-lang-1.0.1.jar"  />
+      <pathelement location="${jdo.home}/lib/jakarta-commons-collections-2.1.jar"  />
+      <pathelement location="${jdo.home}/lib/jakarta-commons-pool-1.0.1.jar"  />
+      <pathelement location="${jdo.home}/lib/jakarta-regexp-1.1.jar"  />
+      <pathelement location="${jdo.home}/lib/log4j-1.2.6.jar"     />
+      <pathelement location="${j2ee.home}/lib/j2ee.jar"           />
+<!--
+      <pathelement location="${j2ee.home}/lib/jndi.jar"           />
+-->
+   </path>
+
+   <!-- class path if Kodo EE is used -->
+   <path id="kodoEE-path-id">
+      <pathelement location="${jdbc.jar}"                         />
+      <pathelement location="${jdo.home}"                         />
+      <pathelement location="${jdo.home}/lib/xerces.jar"          />
+      <pathelement location="${jdo.home}/lib/jaxp.jar"            />
+      <pathelement location="${jdo.home}/lib/jdo1_0.jar"          />
+      <pathelement location="${jdo.home}/lib/jta-spec1_0_1.jar"   />
+      <pathelement location="${jdo.home}/lib/kodo-jdo.jar"        />
+      <pathelement location="${jdo.home}/lib/jdbc2_0-stdext.jar"  />
+      <pathelement location="${jdo.home}/lib/jca1.0.jar"          />
+      <pathelement location="${jdo.home}/lib/serp.jar"            />
+      <pathelement location="${jdo.home}/lib/jakarta-commons-logging-1.0.2.jar"  />
+      <pathelement location="${jdo.home}/lib/jakarta-commons-lang-1.0.1.jar"  />
+      <pathelement location="${jdo.home}/lib/jakarta-commons-collections-2.1.jar"  />
+      <pathelement location="${jdo.home}/lib/jakarta-commons-pool-1.0.1.jar"  />
+      <pathelement location="${jdo.home}/lib/jakarta-regexp-1.1.jar"  />
+      <pathelement location="${jdo.home}/lib/log4j-1.2.6.jar"     />
+      <pathelement location="${j2ee.home}/lib/j2ee.jar"           />
+      <pathelement location="${j2ee.home}/lib/jndi.jar"           />
+   </path>
+
+   <patternset id="KodoSE-jars" >
+      <include name="jaxp.jar" />
+      <include name="jdo1_0.jar" />
+      <include name="kodo-jdo-runtime.jar" />
+      <include name="jdbc2_0-stdext.jar" />
+      <include name="serp.jar" />
+      <include name="jakarta-commons-logging-1.0.2.jar" />
+      <include name="jakarta-commons-lang-1.0.1.jar" />
+      <include name="jakarta-commons-collections-2.1.jar" />
+      <include name="jakarta-commons-pool-1.0.1.jar" />
+      <include name="jakarta-regexp-1.1.jar" />
+   </patternset>
+
+   <patternset id="KodoEE-jars" >
+      <include name="jaxp.jar" />
+      <include name="jdo1_0.jar" />
+      <include name="kodo-jdo-runtime.jar" />
+      <include name="jdbc2_0-stdext.jar" />
+      <include name="serp.jar" />
+      <include name="jca1.0.jar" />
+      <include name="jakarta-commons-logging-1.0.2.jar" />
+      <include name="jakarta-commons-lang-1.0.1.jar" />
+      <include name="jakarta-commons-collections-2.1.jar" />
+      <include name="jakarta-commons-pool-1.0.1.jar" />
+      <include name="jakarta-regexp-1.1.jar" />
+   </patternset>
+
+   <target name="Help" >
+      <echo message="This build script is not called directly.  The main script is build.xml" />
+   </target>
+
+   <target name="determine" >
+      <available property="jdo-classpath-id" value="kodoSE-path-id" file="${jdo.home}/lib/kodo-jdo.jar" />
+      <available property="jdo-classpath-id" value="kodoEE-path-id" file="${jdo.home}/lib/kodo-jdoee.jar" />
+      <available property="jdo.jars" value="KodoSE-jars" file="${jdo.home}/lib/kodo-jdo.jar" />
+      <available property="jdo.jars" value="KodoEE-jars" file="${jdo.home}/lib/kodo-jdoee.jar" />
+   <!--
+      <available property="factory.adaptor" value="JDOKodoSEAdaptor"   file="${jdo.home}/lib/kodo-jdo.jar" />
+      <available property="factory.adaptor" value="JDOKodoEEAdaptor"   file="${jdo.home}/lib/kodo-jdoee.jar" />
+   -->
+      <available property="factory.adaptor2" value="JDOKodoSEAdaptor"  file="${jdo.home}/lib/kodo-jdoee.jar" />
+
+      <!-- <echo message="${jdo.home}/lib/kodo-jdo.jar" /> -->
+
+      <property name="jdo.classpath" refid="${jdo-classpath-id}"   />
+      <property name="compile.classpath"  value="${build.dir};${source.dir};${jdo.classpath};" />
+      <property name="enhance.classpath"  value="${enhanced.dir};${build.dir};${jdo.classpath};" />
+      <property name="run.classpath"      value="${enhanced.dir};${build.dir};${jdo.classpath};" />
+      <property name="jdo.jar"            value="${jdo.home}/lib/jdo1_0.jar" />
+   </target>
+
+   <target name="are-we-ready" depends="determine" >
+      <echo message="compile.classpath is ${compile.classpath}" />
+      <echo message="enhance.classpath is ${enhance.classpath}" />
+      <echo message="run.classpath is ${run.classpath}" />
+      <echo message="jdbc.jar is ${jdbc.jar}" />
+
+      <condition property="ready2" >
+         <and>
+            <not>
+               <equals arg1="${jdo-classpath-id}" arg2="$${jdo-classpath-id}" />
+            </not>
+            <not>
+               <equals arg1="${enhancer.tool}" arg2="$${enhancer.tool}" />
+            </not>
+            <or>
+               <not><equals arg1="${j2ee.home}" arg2="$${j2ee.home}" /></not>
+               <equals arg1="${jdo-classpath-id}" arg2="kodoSE-path-id" />
+            </or>
+         </and>
+      </condition>
+   </target>
+
+   <target name="verify" depends="are-we-ready" unless="ready2" >
+      <echo message="Some property is not set properly, or Kodo install was not found or has changed" />
+      <fail message="You need to install Kodo, or tweak kodo.properties and copy it to custom.properties" />
+   </target>
+
+   <target name="common" depends="verify" >
+      <echo message="calling ${book.path}/common/build.xml" />
+      <ant antfile="${book.path}/common/build.xml" />
+   </target>
+
+   <target name="testjdohelper" depends="verify,common" >
+      <javac
+         srcdir="${source.dir}"
+         destdir="${build.dir}"
+         debug="on"
+         deprecation="on"
+         optimize="off"
+      >
+         <classpath path="${compile.classpath}" />
+         <include name="${book.path}/factory/TestJDOHelper.java" />
+      </javac>
+
+      <echo message="creating runTestJDOHelper.bat" />
+      <echo file="runTestJDOHelper.bat" >
+REM Build generated macro to run the TestJDOHelper example
+java -cp .;${run.classpath} com.ysoft.jdo.book.factory.TestJDOHelper com/ysoft/jdo/book/factory/kodo/kodo.properties
+      </echo>
+
+      <echo message="Running TestJDOHelper" />
+      <echo message="run.classpath=${run.classpath}" />
+      <java classname="com.ysoft.jdo.book.factory.TestJDOHelper"
+            classpath=".;${run.classpath}" fork="yes" failonerror="yes" >
+         <arg line="com/ysoft/jdo/book/factory/kodo/kodo.properties" />
+      </java>
+
+      <echo message="created runTestJDOHelper.bat" />
+   </target>
+
+   <target name="build-factory" depends="verify,common" >
+      <echo message="calling ${book.path}/factory/kodo/build.xml" />
+      <ant antfile="${book.path}/factory/kodo/build.xml" />
+      <echo message="returned from ${book.path}/factory/kodo/build.xml" />
+   </target>
+
+   <target name="testfactory" depends="build-factory,verify,common" >
+
+      <echo message="creating runTestFactory.bat" />
+      <echo file="runTestFactory.bat" >
+REM Build generated macro to run the TestFactory example
+java -cp ${run.classpath} com.ysoft.jdo.book.factory.client.TestFactory com.ysoft.jdo.book.factory.kodo.JDOKodoSEAdaptor
+      </echo>
+
+      <echo message="running TestFactory" />
+      <echo message="run.classpath=${run.classpath}" />
+      <java classname="com.ysoft.jdo.book.factory.client.TestFactory"
+            classpath="${run.classpath}" fork="yes" failonerror="yes" >
+         <arg line="com.ysoft.jdo.book.factory.kodo.JDOKodoSEAdaptor" />
+      </java>
+
+      <echo message="created runTestFactory.bat" />
+   </target>
+
+   <target name="megacups" depends="verify,common" >
+      <echo message="calling ${book.path}/coffee/build.xml" />
+      <ant antfile="${book.path}/coffee/build.xml" />
+      <echo message="returned from ${book.path}/coffee/build.xml" />
+      <copy file="${book.path}/coffee/kodo.properties"
+            tofile="${build.dir}/${book.path}/coffee/factory.properties"/>
+
+      <antcall target="kodo-enhance" >
+         <param name="package" value="coffee" />
+      </antcall>
+      <echo message="returned from kodo-enhanced" />
+
+      <echo message="creating runMegaCups.bat" />
+      <echo file="runMegaCups.bat" >
+REM Build generated macro to run the MegaCups example
+java -cp ${run.classpath} com.ysoft.jdo.book.coffee.MegaCups %1 %2 %3 %4 %5 %6 %7 %8 %9
+      </echo>
+   </target>
+
+   <target name="library" depends="verify,common" >
+      <echo message="calling ${book.path}/library/build.xml" />
+      <ant antfile="${book.path}/library/build.xml" />
+      <echo message="returned from ${book.path}/library/build.xml" />
+      <copy file="${book.path}/library/kodo/kodo.properties"
+            tofile="${build.dir}/${book.path}/library/factory.properties"/>
+
+      <antcall target="kodo-enhance" >
+         <param name="package" value="library" />
+      </antcall>
+      <echo message="returned from kodo-enhanced" />
+
+      <echo message="creating runLibrary.bat" />
+      <echo file="runLibrary.bat" >
+REM Build generated macro to run the library example
+java -cp ${run.classpath} com.ysoft.jdo.book.library.client.Library
+      </echo>
+   </target>
+
+   <target name="statetracker" depends="build-factory,verify,common" >
+      <echo message="calling ${book.path}/statetracker/build.xml" />
+      <ant antfile="${book.path}/statetracker/build.xml" />
+      <echo message="returned from ${book.path}/statetracker/build.xml" />
+
+      <copy file="${book.path}/statetracker/kodo/kodo.properties"
+            tofile="${build.dir}/${book.path}/statetracker/factory.properties"/>
+      <antcall target="kodo-enhance" >
+         <param name="package" value="statetracker" />
+      </antcall>
+      <echo message="returned from kodo-enhanced" />
+      <!-- the properties file is not used during runtime -->
+      <delete file="${build.dir}/${book.path}/statetracker/factory.properties"/>
+
+      <echo message="creating runStatetracker.bat" />
+      <echo file="runStatetracker.bat" >
+REM Build generated macro to run the statetracker example
+java -cp ${run.classpath} com.ysoft.jdo.book.statetracker.client.StateTracker com.ysoft.jdo.book.factory.kodo.JDOKodoSEAdaptor
+      </echo>
+   </target>
+
+   <target name="rental-gui" depends="verify,common" >
+      <echo message="calling ${book.path}/rental/local/build.xml" />
+      <ant antfile="${book.path}/rental/local/build.xml" />
+      <echo message="returned from ${book.path}/rental/local/build.xml" />
+      <copy file="${book.path}/rental/local/kodo.properties" overwrite="yes"
+            tofile="${build.dir}/${book.path}/rental/persistent/factory.properties"/>
+
+      <antcall target="kodo-enhance" >
+         <param name="package" value="rental/persistent" />
+         <param name="subpackage" value="local" />
+         <param name="jdoname" value="persistent" />
+      </antcall>
+      <echo message="returned from kodo-enhanced" />
+
+      <echo message="creating runRentalConsole.bat" />
+      <echo file="runRentalConsole.bat" >
+REM Build generated macro to run the RentalConsole example
+java -cp ${run.classpath} com.ysoft.jdo.book.rental.local.client.console.ReservationClient
+      </echo>
+
+      <echo message="creating runRentalGui.bat" />
+      <echo file="runRentalGui.bat" >
+REM Build generated macro to run the RentalGui example
+java -cp ${run.classpath} com.ysoft.jdo.book.rental.local.client.gui.ReservationClient %1 %2
+      </echo>
+   </target>
+
+   <target name="sayings-stateless-cmt" depends="verify,common" >
+      <property name="ejb.subpackage" value="stateless_cmt" />
+      <antcall target="sayings" />
+   </target>
+
+   <target name="sayings-stateless-bmt" depends="verify,common" >
+      <property name="ejb.subpackage" value="stateless_bmt" />
+      <!-- define this early as its location is different for this build -->
+      <property name="factory-properties"
+            value="${book.path}/sayings/service/session/stateless_bmt/kodo.properties" />
+      <antcall target="sayings" />
+   </target>
+
+   <target name="sayings-stateful-cmt" depends="verify,common" >
+      <property name="ejb.subpackage" value="stateful_cmt" />
+      <antcall target="sayings" />
+   </target>
+
+   <target name="sayings-stateful-bmt" depends="verify,common" >
+      <property name="ejb.subpackage" value="stateful_bmt" />
+      <!-- define this early as its location is different for this build -->
+      <property name="factory-properties"
+            value="${book.path}/sayings/service/session/stateful_bmt/kodo.properties" />
+      <antcall target="sayings" />
+   </target>
+
+   <target name="sayings-entity" depends="verify,common" >
+      <property name="ejb.subpackage" value="." />
+      <antcall target="sayings" />
+   </target>
+
+   <target name="sayings" >
+      <echo message="calling ${book.path}/sayings/build.xml" />
+      <ant antfile="${book.path}/sayings/build.xml" target="sayings" />
+      <echo message="returned from ${book.path}/sayings/build.xml" />
+
+      <!-- this property must be defined for sayings/build.xml -->
+      <property name="factory-properties" value="${book.path}/sayings/persistent/kodo/kodo.properties" />
+      <copy file="${factory-properties}"
+            tofile="${build.dir}/${book.path}/sayings/persistent/factory.properties"/>
+
+      <antcall target="kodo-enhance" >
+         <param name="package" value="sayings/persistent" />
+         <param name="jdoname" value="persistent" />
+      </antcall>
+      <echo message="returned from kodo-enhanced" />
+
+      <echo message="deploying kodo.rar" />
+      <copy file="${jdo.home}/jca/kodo.rar" todir="${jboss.home}/server/default/deploy" />
+      <copy file="${book.path}/sayings/persistent/kodo/kodo-service.xml"
+            todir="${jboss.home}/server/default/deploy" />
+
+      <echo message="calling bookants/jboss.xml" />
+      <ant antfile="bookants/jboss.xml" target="sayings-ejb" />
+      <echo message="returned from ants/jboss.xml" />
+   </target>
+
+   <target name="kodo-enhance">
+      <property name="jdoname" value="${package}" />
+
+      <echo message="checking: ${book.path}/${package}/kodo/${jdoname}.tt" />
+      <echo message="checking: ${book.path}/${package}/${jdoname}.jdo" />
+      <echo message="checking: ${book.path}/${package}/${subpackage}/${jdoname}.jdo" />
+
+      <available property="jdoxml" value="${book.path}/${package}/kodo/${jdoname}.tt"
+            file="${book.path}/${package}/kodo/${jdoname}.tt" />
+      <available property="jdoxml" value="${book.path}/${package}/${jdoname}.jdo"
+            file="${book.path}/${package}/${jdoname}.jdo" />
+      <available property="jdoxml" value="${book.path}/${package}/${subpackage}/${jdoname}.jdo"
+            file="${book.path}/${package}/${subpackage}/${jdoname}.jdo" />
+
+      <available property="factory.properties"
+         value="-properties ${book.path}/${package}/factory.properties"
+         file="${build.dir}/${book.path}/${package}/factory.properties" />
+      <condition property="factory.properties" value="" >
+         <equals arg1="${factory.properties}" arg2="$${factory.properties}" />
+      </condition>
+
+      <echo message="factory.properties: ${factory.properties}" />
+
+      <!-- Kodo enhances in place.  So copy what we need to the enhanced dir -->
+      <copy file="${jdoxml}"
+            tofile="${enhanced.dir}/${book.path}/${package}/${jdoname}.jdo"/>
+
+      <copy todir="${enhanced.dir}" >
+         <fileset dir="${build.dir}" >
+            <patternset >
+               <include name="${book.path}/${package}/*.class" />
+            </patternset>
+         </fileset>
+      </copy>
+
+      <!-- create a file so that we can tell whether any classes have been enhanced -->
+      <echo file="${enhanced.dir}/${book.path}/${package}/mark.txt">A timestamp file</echo>
+
+      <!-- use the verifier  - ->
+      <echo message="Verifying the persistent classes of ${package}" />
+      <!- - - ->
+      <echo message="Verifier: ${meta.data.verifier}" />
+      <echo message="   classpath: ${enhance.classpath}" />
+      <echo message="   arg: ${enhanced.dir}/${book.path}/${package}/${jdoname}.jdo" />
+      <!- - - ->
+      <java classname="${meta.data.verifier}" classpath="${enhance.classpath}" fork="yes" failonerror="true">
+         <arg value="${enhanced.dir}/${book.path}/${package}/${jdoname}.jdo" />
+      </java>
+      <!- - -->
+
+      <!-- use the enhancer -->
+      <echo message="Enhancing the persistent classes of ${package}" />
+      <java classname="${enhancer.tool}" classpath="${enhance.classpath}" fork="yes" failonerror="true" >
+         <arg value="${enhanced.dir}/${book.path}/${package}/${jdoname}.jdo" />
+      </java>
+
+      <uptodate property="nochanges.made"
+            targetfile="${enhanced.dir}/${book.path}/${package}/mark.txt" >
+         <srcfiles dir= "${enhanced.dir}/${book.path}/${package}" includes="*.class"/>
+      </uptodate>
+
+      <condition property="schematool.required" >
+         <or>
+            <equals arg1="${nochanges.made}" arg2="$${nochanges.made}" />
+            <not>
+               <equals arg1="${schema}" arg2="$${schema}" />
+            </not>
+         </or>
+      </condition>
+
+      <condition property="tell-whether-schematool-required" value="no" >
+         <equals arg1="${schematool.required}" arg2="$${schematool.required}" />
+      </condition>
+      <property name="tell-whether-schematool-required" value="yes" />
+
+      <echo message="target: ${enhanced.dir}/${book.path}/${package}/mark.txt" />
+      <echo message="source: ${enhanced.dir}/${book.path}/${package}" />
+      <echo message="updating schema: ${tell-whether-schematool-required}" />
+
+      <echo message="calling kodo-schematool" />
+      <antcall target="kodo-schematool" >
+         <param name="metadata" value="${enhanced.dir}/${book.path}/${package}/${jdoname}.jdo" />
+      </antcall>
+      <echo message="returned from kodo-schematool" />
+   </target>
+
+   <target name="kodo-schematool" if="schematool.required" >
+      <echo message="Using schematool, properties: ${factory.properties}" />
+      <echo message="                    metadata: ${metadata}" />
+      <java classname="${schema.tool}" classpath="${run.classpath}" fork="yes" failonerror="true">
+         <arg line="${factory.properties}" />
+         <arg line="-action refresh" />
+         <arg value="${metadata}" />
+      </java>
+   </target>
+
+   <target name="setup-warfiles" >
+      <!-- delete the files in the warfiles directory -->
+      <delete includeEmptyDirs="true" >
+         <fileset dir="warfiles">
+            <patternset>
+               <!-- a bit dangerous, but does the job -->
+               <include name="**/*" />
+               <exclude name="keepme.txt" />
+            </patternset>
+         </fileset>
+      </delete>
+
+      <copy todir="warfiles/WEB-INF/lib" >
+         <fileset dir="${jdo.home}/lib" >
+            <patternset refid="${jdo.jars}" />
+         </fileset>
+      </copy>
+      <!-- to get the oracle zip working with tomcat, I had to unzip it and then jar it, then
+           deploy it to tomcat/shared/lib.  After that, it worked fine. -->
+   </target>
+
+   <target name="rental-servlet" depends="verify,common,setup-warfiles" >
+      <echo message="calling ${book.path}/rental/servlet/build.xml" />
+      <ant antfile="${book.path}/rental/servlet/build.xml" target="rental-servlet"/>
+      <echo message="returned from ${book.path}/rental/servlet/build.xml" />
+
+      <!-- copy the factory properties here for use by schematool -->
+      <copy file="${book.path}/rental/servlet/${servlet-design}/${schema-properties}" overwrite="yes"
+            tofile="${build.dir}/${book.path}/rental/persistent/factory.properties"/>
+
+      <antcall target="kodo-enhance" >
+         <param name="package" value="rental/persistent" />
+         <param name="subpackage" value="servlet" />
+         <param name="jdoname" value="persistent" />
+      </antcall>
+      <echo message="returned from kodo-enhanced" />
+
+      <ant antfile="bookants/tomcat.xml" target="rental-servlet" >
+      </ant>
+   </target>
+
+   <target name="rental-servlet-opr" depends="verify,common" >
+      <antcall target="rental-servlet">
+         <param name="servlet-design" value="opr" />
+         <param name="schema-properties" value="kodo.properties" />
+      </antcall>
+   </target>
+
+   <target name="rental-servlet-ejb" depends="verify,common,setup-warfiles" >
+      <!-- build the ejb -->
+      <echo message="calling ${book.path}/rental/ejb/build.xml" />
+      <ant antfile="${book.path}/rental/ejb/build.xml" target="rental" />
+      <echo message="returned from ${book.path}/rental/ejb/build.xml" />
+
+      <!-- copy the factory properties here for use by schematool -->
+      <copy file="${book.path}/rental/servlet/ejb/kodo.properties" overwrite="yes"
+            tofile="${build.dir}/${book.path}/rental/persistent/factory.properties"/>
+
+      <antcall target="kodo-enhance" >
+         <param name="package" value="rental/persistent" />
+         <!-- we are still using the persistent classes that the servlet used -->
+         <param name="subpackage" value="ejb" />
+         <param name="jdoname" value="persistent" />
+      </antcall>
+      <echo message="returned from kodo-enhanced" />
+
+      <echo message="calling ants/jboss.xml" />
+      <ant antfile="bookants/jboss.xml" target="rental-ejb" />
+      <echo message="returned from ants/jboss.xml" />
+
+      <echo message="deploying kodo.rar" />
+      <copy file="${jdo.home}/jca/kodo.rar" todir="${jboss.home}/server/default/deploy" />
+      <copy file="${book.path}/rental/ejb/kodo/kodo-service.xml"
+            todir="${jboss.home}/server/default/deploy" />
+
+      <!-- build the servlet -->
+      <echo message="calling ${book.path}/rental/ejb/build.xml" />
+      <ant antfile="${book.path}/rental/ejb/build.xml" target="rental-servlet" />
+      <echo message="returned from ${book.path}/rental/ejb/build.xml" />
+
+      <echo message="calling bookants/jboss.xml" />
+      <ant antfile="bookants/jboss.xml" target="rental-ejb-copy-files" />
+      <echo message="returned from bookants/jboss.xml" />
+
+      <ant antfile="bookants/tomcat.xml" target="rental-servlet-ejb" >
+         <property name="servlet-design" value="ejb" />
+      </ant>
+   </target>
+
+</project>

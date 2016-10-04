@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ejb-jar >
+<ejb-jar>
+   <description>JDO Book Simple Stateful Session Bean Example</description>
+   <display-name>QuoteServer EJB</display-name>
+   <enterprise-beans>
+      <session>
+         <ejb-name>QuoteServer</ejb-name>
+         <home>com.ysoft.jdo.book.sayings.service.session.QuoteServerHome</home>
+         <remote>com.ysoft.jdo.book.sayings.service.session.QuoteServerRemote</remote>
+         <ejb-class>com.ysoft.jdo.book.sayings.service.session.QuoteServerEJB</ejb-class>
+         <session-type>Stateful</session-type>
+         <transaction-type>Bean</transaction-type>
+      </session>
+   </enterprise-beans>
+</ejb-jar>
+

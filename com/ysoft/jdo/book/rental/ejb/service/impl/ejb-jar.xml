@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ejb-jar >
+<ejb-jar>
+   <description>JDO Book Rental Service Stateless Session Bean Example</description>
+   <display-name>ReservationService EJB</display-name>
+   <enterprise-beans>
+      <session>
+         <ejb-name>ReservationService</ejb-name>
+         <home>com.ysoft.jdo.book.rental.ejb.service.ReservationServiceHome</home>
+         <remote>com.ysoft.jdo.book.rental.ejb.service.ReservationServiceRemote</remote>
+         <ejb-class>com.ysoft.jdo.book.rental.ejb.service.impl.ReservationServiceEJB</ejb-class>
+         <session-type>Stateless</session-type>
+         <transaction-type>Container</transaction-type>
+      </session>
+   </enterprise-beans>
+   <assembly-descriptor>
+      <container-transaction>
+         <method>
+            <ejb-name>ReservationService</ejb-name>
+            <method-intf>Remote</method-intf>
+            <method-name>*</method-name>
+         </method>
+         <!-- Note that we can specify either Required or
+               Mandatory, and the managed transactions will work -->
+         <trans-attribute>Required</trans-attribute>
+         <!-- trans-attribute>Mandatory</trans-attribute -->
+      </container-transaction>
+   </assembly-descriptor>
+</ejb-jar>
+

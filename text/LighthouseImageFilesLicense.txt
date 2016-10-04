@@ -1,0 +1,27 @@
+I hereby give permission to redistribute six lighthouse image files
+with the JDO Learning Tools.
+
+The six lighthouse image files
+
+   NubbleLight.bmp
+   NubbleLight.jpg
+   CurtisIslandLight.bmp
+   CurtisIslandLight.jpg
+   BassHarborLight.bmp
+   BassHarborLight.jpg
+
+are derived from images that are copyright by William A.  Britten
+whose web site at http://www.lighthousegetaway.com features images of
+lighthouses.  I give my permission to use these six files with the JDO
+Learning Tools and to redistribute them with the same.  The image
+files may not be used with or redistributed with any other products,
+web sites, or services, or reproduced in any other way without my
+permission.
+
+signed
+
+William A. Britten
+Stonehill Photography
+1917 Stonehills Pl.
+Knoxville TN 37938
+

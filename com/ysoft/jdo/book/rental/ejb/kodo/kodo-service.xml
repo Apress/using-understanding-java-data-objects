@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+      This is a service configuration file for deploying Kodo in
+      JBoss 3.0RC1. To deploy Kodo as a Resource Adaptor in JBoss:
+
+      1. Edit the configuration properties in this file, such as the
+         license key and JDBC driver information.
+      2. Copy this kodo-service.xml and the kodo.rar file to your
+         JBOSS_HOME/server/SERVER_NAME/deploy/ directory
+      3. Start JBoss: You should see that the Kodo JDOConnectionFactory
+         is bound to the JNDI name java:/jdoCF, which you can then
+         look up. This is a ConnectionFactory object: you can call
+         getConnection() on it, and cast it to a javax.jdo.PersistenceManager
+         object.
+
+      WARNING: This configuration file works *only* for JBoss 3.0.0RC1 (and later).
+      JBoss' Resource Adaptor configuration file format has changed
+      completely between 3.0.0beta and 3.0.0RC1, so this file will
+      not work with any previous versions.
+-->
+
+<server>
+   <mbean code="org.jboss.resource.connectionmanager.LocalTxConnectionManager"
+      name="jboss.jca:service=LocalTxCM,name=KodoManagedConnectionPool">
+
+      <!-- Make sure the RAR Deployer is deployed -->
+      <depends>jboss.jca:service=RARDeployer</depends>
+
+      <depends optional-attribute-name="ManagedConnectionFactoryName">
+         <!--embedded mbean-->
+         <mbean code="org.jboss.resource.connectionmanager.RARDeployment"
+            name="jboss.jca:service=LocalTxDS,name=KodoManagedConnectionPool">
+
+            <!-- Required support for all RAR name: this is the service name
+                  in the kodo.rar ra.xml file -->
+            <depends optional-attribute-name="OldRarDeployment">
+                  jboss.jca:service=RARDeployment,name=KodoJDO
+            </depends>
+
+            <!-- These are the JDO configuration attributes: see the
+                  documentation for the JDBCConfiguration class for details
+                  on all the configuration options. -->
+            <attribute name="ManagedConnectionFactoryProperties">
+               <properties>
+                  <config-property>
+                     <config-property-name>LicenseKey</config-property-name>
+                     <config-property-type>java.lang.String</config-property-type>
+                     <config-property-value>*** license key here ***</config-property-value>
+                  </config-property>
+                  <config-property>
+                     <config-property-name>ConnectionDriverName</config-property-name>
+                     <config-property-type>java.lang.String</config-property-type>
+                     <config-property-value>oracle.jdbc.driver.OracleDriver</config-property-value>
+                  </config-property>
+                  <config-property>
+                     <config-property-name>ConnectionPassword</config-property-name>
+                     <config-property-type>java.lang.String</config-property-type>
+                     <config-property-value>jdotutorial</config-property-value>
+                  </config-property>
+                  <config-property>
+                     <config-property-name>ConnectionURL</config-property-name>
+                     <config-property-type>java.lang.String</config-property-type>
+                     <config-property-value>jdbc:oracle:thin:@ysoftlaptop:1521:OAK</config-property-value>
+                  </config-property>
+                  <config-property>
+                     <config-property-name>ConnectionUserName</config-property-name>
+                     <config-property-type>java.lang.String</config-property-type>
+                     <config-property-value>jdotutorial</config-property-value>
+                  </config-property>
+                  <config-property>
+                     <config-property-name>ManagedRuntimeProperties</config-property-name>
+                     <config-property-type>java.lang.String</config-property-type>
+                     <config-property-value>TransactionManagerName=java:/TransactionManager</config-property-value>
+                  </config-property>
+                  <config-property>
+                     <config-property-name>MaxPool</config-property-name>
+                     <config-property-type>int</config-property-type>
+                     <config-property-value>10</config-property-value>
+                  </config-property>
+                  <config-property>
+                     <config-property-name>MinPool</config-property-name>
+                     <config-property-type>int</config-property-type>
+                     <config-property-value>1</config-property-value>
+                  </config-property>
+                  <config-property>
+                     <config-property-name>NontransactionalRead</config-property-name>
+                     <config-property-type>boolean</config-property-type>
+                     <config-property-value>false</config-property-value>
+                  </config-property>
+                  <config-property>
+                     <config-property-name>NontransactionalWrite</config-property-name>
+                     <config-property-type>boolean</config-property-type>
+                     <config-property-value>false</config-property-value>
+                  </config-property>
+                  <config-property>
+                     <config-property-name>Optimistic</config-property-name>
+                     <config-property-type>boolean</config-property-type>
+                     <config-property-value>false</config-property-value>
+                  </config-property>
+                  <config-property>
+                     <config-property-name>RestoreValues</config-property-name>
+                     <config-property-type>boolean</config-property-type>
+                     <config-property-value>false</config-property-value>
+                  </config-property>
+                  <config-property>
+                     <config-property-name>RetainValues</config-property-name>
+                     <config-property-type>boolean</config-property-type>
+                     <config-property-value>false</config-property-value>
+                  </config-property>
+                  <config-property>
+                     <config-property-name>WarnOnPersistentTypeFailure</config-property-name>
+                     <config-property-type>boolean</config-property-type>
+                     <config-property-value>true</config-property-value>
+                  </config-property>
+<!-- required for Oracle 8.1 and Kodo 2.5.0                
+                  <config-property>
+                     <config-property-name>UseSQL92Joins</config-property-name>
+                     <config-property-type>boolean</config-property-type>
+                     <config-property-value>false</config-property-value>
+                  </config-property>
+-->                  
+               </properties>
+            </attribute>
+            <attribute name="JndiName">jdoCF</attribute>
+         </mbean>
+      </depends>
+
+      <depends optional-attribute-name="ManagedConnectionPool">
+         <!--embedded mbean-->
+         <mbean code="org.jboss.resource.connectionmanager.JBossManagedConnectionPool"
+            name="jboss.jca:service=LocalTxPool,name=KodoManagedConnectionPool">
+            <attribute name="MinSize">0</attribute>
+            <attribute name="MaxSize">50</attribute>
+            <attribute name="BlockingTimeoutMillis">5000</attribute>
+            <attribute name="IdleTimeoutMinutes">15</attribute>
+            <attribute name="Criteria">ByContainer</attribute>
+         </mbean>
+      </depends>
+      <depends optional-attribute-name="CachedConnectionManager">
+            jboss.jca:service=CachedConnectionManager
+      </depends>
+      <attribute name="TransactionManager">java:/TransactionManager</attribute>
+   </mbean>
+</server>
+

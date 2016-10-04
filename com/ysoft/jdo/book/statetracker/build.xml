@@ -1,0 +1,37 @@
+<project name="JDO Book Examples Ant Script for statetracker package" default="statetracker" basedir=".">
+
+   <target name="all-variables-defined" >
+      <condition property="statetracker-ready" >
+         <not><or>
+            <equals arg1="${source.dir}"        arg2="$${source.dir}" />
+            <equals arg1="${build.dir}"         arg2="$${build.dir}" />
+            <equals arg1="${compile.classpath}" arg2="$${compile.classpath}" />
+            <equals arg1="${book.path}"         arg2="$${book.path}" />
+         </or></not>
+      </condition>
+   </target>
+
+   <target name="verify" depends="all-variables-defined" unless="statetracker-ready" >
+      <echo message="A build variable is not defined" />
+      <echo message="   Check ${source.dir}, ${build.dir}" />
+      <echo message="   Check ${book.path}" />
+      <echo message="   Check ${compile.classpath}" />
+      <fail message="A build variable is not defined" />
+   </target>
+
+   <target name="statetracker" description="Build statetracker example" depends="verify" >
+      <javac
+         srcdir="${source.dir}"
+         destdir="${build.dir}"
+         debug="on"
+         deprecation="on"
+         optimize="off"
+      >
+         <classpath path="${compile.classpath}" />
+         <include name="${book.path}/statetracker/*.java" />
+         <include name="${book.path}/statetracker/client/*.java" />
+      </javac>
+   </target>
+
+</project>
+

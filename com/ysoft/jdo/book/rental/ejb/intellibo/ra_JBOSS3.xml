@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE connector PUBLIC '-//Sun Microsystems, Inc.//DTD Connector 1.0//EN' 'http://java.sun.com/j2ee/dtds/connector_1_0.dtd'>
+
+<connector>
+    <display-name>Signsoft_intelliBO_JDO_Persistence_Provider</display-name>
+    <vendor-name>Signsoft GmbH</vendor-name>
+    <spec-version>1.0</spec-version>
+    <eis-type>JDO RDBMS</eis-type>
+    <version>1.0.0</version>
+    <resourceadapter>
+        <managedconnectionfactory-class>com.signsoft.ibo.client.jca.ManagedPersistenceManagerFactory</managedconnectionfactory-class>
+        <connectionfactory-interface>com.signsoft.ibo.client.jca.IBOJCAPersistenceManagerFactory</connectionfactory-interface>
+        <connectionfactory-impl-class>com.signsoft.ibo.client.jca.JCAPersistenceManagerFactory</connectionfactory-impl-class>
+        <connection-interface>com.signsoft.ibo.client.jca.IBOJCAPersistenceManager</connection-interface>
+        <connection-impl-class>com.signsoft.ibo.client.jca.JCAPersistenceManager</connection-impl-class>
+        <transaction-support>LocalTransaction</transaction-support>
+	<reauthentication-support>false</reauthentication-support>
+    </resourceadapter>
+</connector>

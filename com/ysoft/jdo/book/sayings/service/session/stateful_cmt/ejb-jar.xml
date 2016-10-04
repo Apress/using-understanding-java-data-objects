@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ejb-jar >
+<ejb-jar>
+   <description>JDO Book Simple Stateful Session Bean Example</description>
+   <display-name>QuoteServer EJB</display-name>
+   <enterprise-beans>
+      <session>
+         <ejb-name>QuoteServer</ejb-name>
+         <home>com.ysoft.jdo.book.sayings.service.session.QuoteServerHome</home>
+         <remote>com.ysoft.jdo.book.sayings.service.session.QuoteServerRemote</remote>
+         <ejb-class>com.ysoft.jdo.book.sayings.service.session.QuoteServerEJB</ejb-class>
+         <session-type>Stateful</session-type>
+         <transaction-type>Container</transaction-type>
+      </session>
+   </enterprise-beans>
+   <assembly-descriptor>
+      <container-transaction>
+         <method>
+            <ejb-name>QuoteServer</ejb-name>
+            <method-intf>Remote</method-intf>
+            <method-name>*</method-name>
+         </method>
+         <!-- Note that we can specify either Required or
+               Mandatory, and the managed transactions will work
+               transparently with Kodo. -->
+         <trans-attribute>Required</trans-attribute>
+         <!-- trans-attribute>Mandatory</trans-attribute -->
+      </container-transaction>
+   </assembly-descriptor>
+</ejb-jar>
+

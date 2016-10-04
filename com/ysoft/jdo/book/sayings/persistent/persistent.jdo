@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jdo PUBLIC "-//Sun Microsystems, Inc.//DTD Java Data Objects Metadata 1.0//EN"
+         "http://java.sun.com/dtd/jdo_1_0.dtd">
+<jdo>
+   <package name="com.ysoft.jdo.book.sayings.persistent">
+      <class name="Quote" identity-type="datastore" />
+      <class name="QuoteManager"
+            identity-type="application"
+            objectid-class="QuoteManager$QuoteManagerOID" >
+         <field name="pKey" primary-key="true" />
+      </class>
+   </package>
+</jdo>
+
+

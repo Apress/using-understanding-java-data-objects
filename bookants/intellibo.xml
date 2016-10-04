@@ -1,0 +1,587 @@
+<!--
+Copyright (c) 2002 Yankee Software.
+
+This file is part of the JDO Learning Tools
+
+The JDO Learning Tools is free software; you can use it, redistribute it,
+and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
+
+The JDO Learning Tools software is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied
+warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See
+the GNU General Public License for more details.
+
+A copy of the GPL Version 2 is contained in LICENSE.TXT in this source
+distribution.  If you cannot find LICENSE.TXT, write to the Free
+Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+02111-1307 USA or visit www.fsf.org on the web.
+
+Copyright law and the license agreement do not apply to your
+understanding of the the concepts, principles, and practices embedded
+in this code.  The purpose of the JDO Learning Tools to to help
+advance the use and understanding of Java Data Objects, the standard
+for transparent persistence for Java objects from the Java Community
+Process.
+
+Change History:
+
+Please insert a brief record of any changes made.
+
+Author            Date        Purpose
+=================+==========+===================================
+David Ezzio       09/01/02   Created
+-->
+
+<!-- This build is specific to the IntelliBO JDO Implementation from SignSoft -->
+<project name="JDO Book Examples Ant Script: subscripts specific to SignSoft IntelliBO" default="Help" basedir=".">
+
+   <property name="enhancer.tool" value="com.signsoft.ibo.enhancer.Main" />
+   <property name="enhancer.jar" value="${jdo.home}/lib/enhancer.jar;${jdo.home}/lib/schemagen.jar;${jdo.home}/lib/verifier.jar"      />
+   <property name="schema.tool" value="com.signsoft.ibo.schemagen.Main" />
+   <property name="tool.args" value="-v:info" />
+   <property name="meta.data.verifier" value="com.signsoft.ibo.verifier.Main" />
+
+   <!-- class path for IntelliBO -->
+   <path id="jdoINTELLIBO-path-id">
+      <pathelement location="${jdbc.jar}"                         />
+      <pathelement location="${jdo.home}/lib"                     />
+      <pathelement location="${jdo.home}/lib/dbsupport_oracle.jar"/>
+      <pathelement location="${jdo.home}/lib/ibocore.jar"         />
+      <pathelement location="${jdo.home}/lib/ibometa.jar"         />
+      <pathelement location="${jdo.home}/lib/jdbc2_0-stdext.jar"  />
+      <pathelement location="${jdo.home}/lib/jta.jar"             />
+      <pathelement location="${jdo.home}/lib/log4j.jar"           />
+      <pathelement location="${jdo.home}/lib/jdo.jar"             />
+      <pathelement location="${jdo.home}/lib/ssjava.jar"          />
+      <pathelement location="${jdo.home}/lib/xerces.jar"          />
+      <pathelement location="${j2ee.home}/lib/j2ee.jar"           />
+   </path>
+
+   <target name="Help" >
+      <echo message="This build script is not called directly.  The main script is build.xml" />
+   </target>
+
+   <target name="determine" >
+      <echo message="JDO HOME is: ${jdo.home}" />
+      <available property="jdo-classpath-id" value="jdoINTELLIBO-path-id" file="${jdo.home}/lib/ibocore.jar" />
+      <available property="factory.adaptor" value="JDOIntelliboAdaptor"   file="${jdo.home}/lib/ibocore.jar" />
+
+      <property name="jdo.classpath"      refid="${jdo-classpath-id}"   />
+      <property name="compile.classpath"  value="${build.dir};${source.dir};${jdo.classpath};" />
+      <property name="enhance.classpath"  value="${build.dir};${jdo.classpath};${enhancer.jar};" />
+      <property name="run.classpath"      value="${enhanced.dir};${build.dir};${jdo.classpath};" />
+      <property name="jdo.jar"            value="${jdo.home}/lib/jdo.jar" />
+   </target>
+
+   <target name="check" depends="determine" >
+      <condition property="ready2" >
+         <and>
+            <available file="${jdbc.jar}" />
+            <not><or>
+               <equals arg1="${jdo-classpath-id}" arg2="$${jdo-classpath-id}" />
+               <equals arg1="${enhancer.tool}" arg2="$${enhancer.tool}" />
+            </or></not>
+            <or>
+               <equals arg1="${jdo-classpath-id}" arg2="jdoINTELLIBO-path-id" />
+            </or>
+            <available file="${jdo.home}/lib/ibocore.jar"    />
+         </and>
+      </condition>
+   </target>
+
+   <target name="verify" depends="check" unless="ready2" >
+      <echo message="Some property is not set properly, or Intellibo install was not found or has changed" />
+      <echo message="Check: ${jdo.home}/lib/j2ee.jar"              />
+      <echo message="       ${jdo.home}/lib/ibocore.jar"            />
+      <echo message="Check JDBC_JAR:  current: ${jdbc.jar}" />
+      <echo message="compile.classpath is ${compile.classpath}" />
+      <echo message="enhance.classpath is ${enhance.classpath}" />
+      <echo message="run.classpath is ${run.classpath}" />
+      <echo message="selected jdbc.jar: ${jdbc.jar}" />
+
+      <fail message="You need to tweak intellibo.properties, IntelliBO install, or build" />
+   </target>
+
+   <target name="common" depends="verify" >
+      <echo message="calling ${book.path}/common/build.xml" />
+      <ant antfile="${book.path}/common/build.xml" />
+   </target>
+
+   <target name="testjdohelper" depends="verify,common" >
+      <javac
+         srcdir="${source.dir}"
+         destdir="${build.dir}"
+         debug="on"
+         deprecation="on"
+         optimize="off"
+      >
+         <classpath path="${compile.classpath}" />
+         <include name="${book.path}/factory/TestJDOHelper.java" />
+      </javac>
+
+      <echo message="creating runTestJDOHelper.bat" />
+      <echo file="runTestJDOHelper.bat" >
+REM Build generated macro to run the TestJDOHelper example
+java -cp .;${run.classpath} com.ysoft.jdo.book.factory.TestJDOHelper com/ysoft/jdo/book/factory/intellibo/intellibo.properties
+      </echo>
+
+      <echo message="Running TestJDOHelper" />
+      <echo message="run.classpath=${run.classpath}" />
+      <java classname="com.ysoft.jdo.book.factory.TestJDOHelper"
+            classpath=".;${run.classpath}" fork="yes" failonerror="yes" >
+         <arg line="com/ysoft/jdo/book/factory/intellibo/intellibo.properties" />
+      </java>
+
+      <echo message="created runTestJDOHelper.bat" />
+   </target>
+
+   <target name="build-factory" depends="verify,common" >
+      <echo message="calling ${book.path}/factory/intellibo/build.xml" />
+      <ant antfile="${book.path}/factory/intellibo/build.xml" />
+      <echo message="returned from ${book.path}/factory/intellibo/build.xml" />
+   </target>
+
+   <target name="testfactory" depends="build-factory,verify,common" >
+      <echo message="creating runTestFactory.bat" />
+      <echo file="runTestFactory.bat" >
+REM Build generated macro to run the TestFactory example
+java -cp ${run.classpath} com.ysoft.jdo.book.factory.client.TestFactory com.ysoft.jdo.book.factory.intellibo.${factory.adaptor} %1 %2 %3 %4 %5 %6 %7 %8 %9
+      </echo>
+
+      <echo message="running TestFactory" />
+      <echo message="run.classpath=${run.classpath}" />
+      <java classname="com.ysoft.jdo.book.factory.client.TestFactory"
+            classpath="${run.classpath}" fork="yes" failonerror="yes" >
+         <arg value="com.ysoft.jdo.book.factory.intellibo.${factory.adaptor}" />
+      </java>
+
+      <echo message="created runTestFactory.bat" />
+   </target>
+
+   <target name="megacups" depends="verify,common" >
+      <echo message="calling ${book.path}/coffee/build.xml" />
+      <ant antfile="${book.path}/coffee/build.xml" />
+      <echo message="returned from ${book.path}/coffee/build.xml" />
+
+      <antcall target="intellibo-enhance" >
+         <param name="package" value="coffee" />
+      </antcall>
+      <echo message="returned from intellibo-enhance" />
+
+      <copy file="${book.path}/coffee/intellibo.properties"
+            tofile="${build.dir}/${book.path}/coffee/factory.properties"/>
+
+      <echo message="creating runMegaCups.bat" />
+      <echo file="runMegaCups.bat" >
+REM Build generated macro to run the MegaCups example
+java -cp ${run.classpath} com.ysoft.jdo.book.coffee.MegaCups %1 %2 %3 %4 %5 %6 %7 %8 %9
+      </echo>
+   </target>
+
+   <target name="library" depends="verify,common" >
+      <echo message="calling ${book.path}/library/build.xml" />
+      <ant antfile="${book.path}/library/build.xml" />
+      <echo message="returned from ${book.path}/library/build.xml" />
+
+      <antcall target="intellibo-enhance" >
+         <param name="package" value="library" />
+      </antcall>
+      <echo message="returned from intellibo-enhance" />
+
+      <copy file="${book.path}/library/intellibo/intellibo.properties"
+            tofile="${build.dir}/${book.path}/library/factory.properties"/>
+
+      <echo message="creating runLibrary.bat" />
+      <echo file="runLibrary.bat" >
+REM Build generated macro to run the library example
+java -cp ${run.classpath} com.ysoft.jdo.book.library.client.Library
+      </echo>
+   </target>
+
+   <target name="statetracker" depends="build-factory,verify,common" >
+      <echo message="calling ${book.path}/statetracker/build.xml" />
+      <ant antfile="${book.path}/statetracker/build.xml" />
+      <echo message="returned from ${book.path}/statetracker/build.xml" />
+
+      <antcall target="intellibo-enhance" >
+         <param name="package" value="statetracker" />
+      </antcall>
+      <echo message="returned from intellibo-enhance" />
+
+      <echo message="creating runStatetracker.bat" />
+      <echo file="runStatetracker.bat" >
+REM Build generated macro to run the statetracker example
+java -cp ${run.classpath} com.ysoft.jdo.book.statetracker.client.StateTracker com.ysoft.jdo.book.factory.intellibo.JDOIntelliboAdaptor
+      </echo>
+   </target>
+
+   <target name="rental-gui" depends="verify,common" >
+      <echo message="calling ${book.path}/rental/local/build.xml" />
+      <ant antfile="${book.path}/rental/local/build.xml" />
+      <echo message="returned from ${book.path}/rental/local/build.xml" />
+      <copy file="${book.path}/rental/local/${jdo.tool}.properties"
+            tofile="${build.dir}/${book.path}/rental/persistent/factory.properties"/>
+
+      <antcall target="intellibo-enhance" >
+         <param name="superpackage" value="rental" />
+         <param name="package"      value="persistent" />
+         <param name="subpackage"   value="local" />
+         <param name="jdoname"      value="persistent" />
+      </antcall>
+      <echo message="returned from intellibo-enhance" />
+
+      <echo message="creating runRentalConsole.bat" />
+      <echo file="runRentalConsole.bat" >
+REM Build generated macro to run the RentalConsole example
+java -cp ${run.classpath} com.ysoft.jdo.book.rental.local.client.console.ReservationClient
+      </echo>
+
+      <echo message="creating runRentalGui.bat" />
+      <echo file="runRentalGui.bat" >
+REM Build generated macro to run the RentalGui example
+java -cp ${run.classpath} com.ysoft.jdo.book.rental.local.client.gui.ReservationClient %1 %2
+      </echo>
+   </target>
+
+   <target name="intellibo-enhance" >
+      <property name="jdoname" value="${package}" />
+      <echo message="checking: ${book.path}/${package}/intellibo/${jdoname}.ibo" />
+      <echo message="checking: ${book.path}/${package}/${jdoname}.jdo" />
+      <echo message="checking: ${book.path}/${package}/${subpackage}/${jdoname}.jdo" />
+
+      <available property="jdoxml" value="${book.path}/${package}/intellibo/${jdoname}.ibo"
+            file="${book.path}/${package}/intellibo/${jdoname}.ibo" />
+      <available property="jdoxml" value="${book.path}/${package}/${jdoname}.jdo"
+            file="${book.path}/${package}/${jdoname}.jdo" />
+      <available property="jdoxml" value="${book.path}/${package}/${subpackage}/${jdoname}.jdo"
+            file="${book.path}/${package}/${subpackage}/${jdoname}.jdo" />
+
+      <available property="jdoxml" value="${book.path}/${superpackage}/${package}/intellibo/${jdoname}.ibo"
+            file="${book.path}/${superpackage}/${package}/intellibo/${jdoname}.ibo" />
+      <available property="jdoxml" value="${book.path}/${superpackage}/${package}/${jdoname}.jdo"
+            file="${book.path}/${superpackage}/${package}/${jdoname}.jdo" />
+      <available property="jdoxml" value="${book.path}/${superpackage}/${package}/${subpackage}/${jdoname}.jdo"
+            file="${book.path}/${superpackage}/${package}/${subpackage}/${jdoname}.jdo" />
+
+      <condition property="dest-dir" value="${book.path}/${superpackage}" >
+         <not>
+            <equals arg1="${superpackage}" arg2="$${superpackage}" />
+         </not>
+      </condition>
+      <property name="dest-dir" value="${book.path}" />
+
+<echo message="enhanced.dir: ${enhanced.dir}" />
+<echo message="book.path: ${book.path}" />
+<echo message="package: ${package}" />
+<echo message="jdoxml: ${jdoxml}" />
+<echo message="dest-dir: ${dest-dir}" />
+
+      <copy file="${jdoxml}"
+            tofile="${build.dir}/${dest-dir}/${package}.jdo"/>
+
+      <!-- use the verifier -->
+      <echo message="Verifying the persistent classes of ${package}" />
+      <java classname="${meta.data.verifier}" classpath="${enhance.classpath}" fork="yes" failonerror="true">
+         <arg line="${tool.args}" />
+         <arg line="-dbname oracle" />
+         <arg line="-s ${dest-dir}/${package}" />
+         <arg line="-cp build" />
+      </java>
+
+      <!-- The intellibo enhancer needs to be constrained, copy files to temp directory -->
+      <delete includeEmptyDirs="true" >
+         <fileset dir="temp">
+            <patternset>
+               <include name="**/*" />
+               <exclude name="keepme.txt" />
+            </patternset>
+         </fileset>
+      </delete>
+      <copy todir="temp" >
+         <fileset dir="${build.dir}">
+            <patternset>
+               <include name="${dest-dir}/${package}/*" />
+            </patternset>
+         </fileset>
+      </copy>
+
+      <!-- use the enhancer tool -->
+      <java classname="${enhancer.tool}"
+            classpath="${enhance.classpath}"
+            fork="yes"
+            failonerror="true" >
+         <arg line="${tool.args}" />
+         <arg line="-s temp" />
+         <arg line="-d ${enhanced.dir}" />
+      </java>
+
+      <!-- copy the jdo file to the enhanced directory -->
+      <copy file="${build.dir}/${dest-dir}/${package}.jdo"
+            tofile="${enhanced.dir}/${dest-dir}/${package}.jdo"/>
+
+      <antcall target="do-schema" >
+         <param name="sql.file" value="${package}.sql" />
+      </antcall>
+      <echo message="returned from do-schema" />
+   </target >
+
+   <target name="do-schema" if="schema" >
+      <echo message="creating schema for package: ${package}" />
+      <echo message="creating schema, using classpath: ${enhance.classpath}" />
+      <java classname="${schema.tool}" classpath="${enhance.classpath}" fork="yes" failonerror="true">
+         <arg line="${tool.args}" />
+         <arg line="-dbname oracle" />
+         <arg line="-s ${enhanced.dir}" />
+         <arg line="-d ${enhanced.dir}/${dest-dir}/${package}" />
+      </java>
+   </target>
+
+   <target name="setup-warfiles" >
+      <!-- delete the files in the warfiles directory -->
+      <delete includeEmptyDirs="true" >
+         <fileset dir="warfiles">
+            <patternset>
+               <!-- a bit dangerous, but does the job -->
+               <include name="**/*" />
+               <exclude name="keepme.txt" />
+            </patternset>
+         </fileset>
+      </delete>
+
+      <copy todir="warfiles/WEB-INF/lib" >
+         <fileset dir="${jdo.home}/lib" >
+            <patternset>
+               <include name="dbsupport_oracle.jar"/>
+               <include name="ibocore.jar"         />
+               <include name="ibometa.jar"         />
+               <include name="jdbc2_0-stdext.jar"  />
+               <include name="jta.jar"             />
+               <include name="log4j.jar"           />
+               <include name="jdo.jar"             />
+               <include name="ssjava.jar"          />
+               <include name="xerces.jar"          />
+            </patternset>
+         </fileset>
+      </copy>
+      <copy todir="warfiles/WEB-INF/classes" >
+         <fileset dir="${jdo.home}/lib" >
+            <patternset>
+               <include name="ibo.license" />
+            </patternset>
+         </fileset>
+      </copy>
+      <!-- to get the oracle zip working with tomcat, I had to unzip it and then jar it, then
+           deploy it to tomcat/shared/lib.  After that, it worked fine. -->
+   </target>
+
+   <target name="rental-servlet" depends="verify,common,setup-warfiles" >
+      <echo message="calling ${book.path}/rental/servlet/build.xml" />
+      <ant antfile="${book.path}/rental/servlet/build.xml" target="rental-servlet"/>
+      <echo message="returned from ${book.path}/rental/servlet/build.xml" />
+
+      <!-- copy the factory properties here for use by schematool -->
+      <copy file="${book.path}/rental/servlet/${servlet-design}/${schema-properties}" overwrite="yes"
+            tofile="${build.dir}/${book.path}/rental/persistent/factory.properties"/>
+
+      <antcall target="intellibo-enhance" >
+         <param name="superpackage" value="rental" />
+         <param name="package"      value="persistent" />
+         <param name="subpackage"   value="servlet" />
+         <param name="jdoname"      value="persistent" />
+      </antcall>
+      <echo message="returned from intellibo-enhance" />
+
+      <ant antfile="bookants/tomcat.xml" target="rental-servlet" >
+      </ant>
+   </target>
+
+   <target name="rental-servlet-opr" depends="verify,common" >
+      <antcall target="rental-servlet">
+         <param name="servlet-design" value="opr" />
+         <param name="schema-properties" value="intellibo.properties" />
+      </antcall>
+   </target>
+
+   <target name="sayings-stateless-cmt" depends="verify,common" >
+      <property name="ejb.subpackage" value="stateless_cmt" />
+      <antcall target="sayings" />
+   </target>
+
+   <target name="sayings-stateless-bmt" depends="verify,common" >
+      <property name="ejb.subpackage" value="stateless_bmt" />
+      <!-- define this early as its location is different for this build -->
+      <property name="factory-properties"
+            value="${book.path}/sayings/service/session/stateless_bmt/intellibo.properties" />
+      <antcall target="sayings" />
+   </target>
+
+   <target name="sayings-stateful-cmt" depends="verify,common" >
+      <property name="ejb.subpackage" value="stateful_cmt" />
+      <antcall target="sayings" />
+   </target>
+
+   <target name="sayings-stateful-bmt" depends="verify,common" >
+      <property name="ejb.subpackage" value="stateful_bmt" />
+      <!-- define this early as its location is different for this build -->
+      <property name="factory-properties"
+            value="${book.path}/sayings/service/session/stateful_bmt/intellibo.properties" />
+      <antcall target="sayings" />
+   </target>
+
+   <target name="sayings-entity" depends="verify,common" >
+      <property name="ejb.subpackage" value="." />
+      <antcall target="sayings" />
+   </target>
+
+   <target name="sayings" >
+      <echo message="calling ${book.path}/sayings/build.xml" />
+      <ant antfile="${book.path}/sayings/build.xml" target="sayings" />
+      <echo message="returned from ${book.path}/sayings/build.xml" />
+
+      <!-- this property must be defined for sayings/build.xml -->
+      <property name="factory-properties" value="${book.path}/sayings/persistent/intellibo/intellibo.properties" />
+
+      <antcall target="intellibo-enhance" >
+         <param name="package" value="sayings/persistent" />
+         <param name="jdoname" value="persistent" />
+      </antcall>
+      <echo message="returned from intellibo-enhance" />
+
+      <!-- build Intellibo's RAR file -->
+      <antcall target="build-rar" >
+         <param name="rar-config" value="sayings/persistent/intellibo" />
+      </antcall>
+      <echo message="returned from build-rar" />
+
+      <echo message="calling ants/jboss.xml" />
+      <ant antfile="bookants/jboss.xml" target="sayings-ejb" />
+      <echo message="returned from ants/jboss.xml" />
+   </target>
+
+   <target name="build-rar">
+      <!-- build component jar that goes in Intellibo's RAR file -->
+      <jar jarfile="serverjars/iboExtra.jar" update="yes" >
+
+<!--
+            recommended by SignSoft for case where the application's first use
+            of the PC class is a call to getObjectById
+            Not used here so that RAR deployment can be indepedent of the particular EJB
+
+         <fileset dir="${enhanced.dir}" >
+            <patternset >
+               <include name="${book.path}/sayings/persistent/*.class" />
+               <include name="${book.path}/sayings/persistent.jdo" />
+            </patternset>
+         </fileset>
+-->
+
+         <fileset dir="${book.path}/${rar-config}" >
+            <patternset >
+               <include name="ibo-config.xml" />
+            </patternset>
+         </fileset>
+         <fileset dir="${jdo.home}/lib" >
+            <patternset >
+               <include name="ibo.license" />
+            </patternset>
+         </fileset>
+      </jar>
+
+      <!-- build the Intellibo RAR file -->
+      <echo message="deploying intellibo.rar" />
+      <copy file="${book.path}/${rar-config}/ra_jboss3.xml"
+            tofile="temp/ra.xml"/>
+
+      <jar jarfile="serverjars/intellibo.rar" update="yes" >
+         <metainf dir="temp" >
+            <patternset >
+               <include name="ra.xml" />
+            </patternset>
+         </metainf>
+         <fileset dir="serverjars" >
+            <patternset >
+               <include name="iboExtra.jar" />
+            </patternset>
+         </fileset>
+         <fileset dir="${jdo.home}/lib" >
+            <patternset >
+               <include name="activation.jar" />
+               <include name="ibo_jca.jar" />
+               <include name="ibocore.jar" />
+               <include name="ibometa.jar" />
+               <include name="ibotools.jar" />
+               <include name="jaxm.jar" />
+               <include name="jdo.jar" />
+               <include name="jhall.jar" />
+               <include name="mail.jar" />
+               <include name="ssjava.jar" />
+               <include name="ssjaxb.jar" />
+               <include name="log4j.jar" />
+               <include name="dbsupport_jdbc1.jar" />
+               <include name="dbsupport_jdbc2.jar" />
+               <include name="dbsupport_jdbc3.jar" />
+               <include name="dbsupport_informix.jar" />
+               <include name="dbsupport_instantdb_enhydra.jar" />
+               <include name="dbsupport_interbase.jar" />
+               <include name="dbsupport_jdbc1.jar" />
+               <include name="dbsupport_jdbc2.jar" />
+               <include name="dbsupport_jdbc3.jar" />
+               <include name="dbsupport_mssql.jar" />
+               <include name="dbsupport_mysql.jar" />
+               <include name="dbsupport_oracle.jar" />
+               <include name="dbsupport_pervasive.jar" />
+               <include name="dbsupport_postgresql.jar" />
+               <include name="dbsupport_progress.jar" />
+               <include name="dbsupport_sapdb.jar" />
+               <include name="dbsupport_sybase.jar" />
+            </patternset>
+         </fileset>
+      </jar>
+
+      <copy file="serverjars/intellibo.rar" todir="${jboss.home}/server/default/deploy" />
+      <copy file="${book.path}/${rar-config}/intellibo-service.xml"
+            todir="${jboss.home}/server/default/deploy" />
+   </target>
+
+   <target name="rental-servlet-ejb" depends="verify,common,setup-warfiles" >
+      <!-- compile the persistence capable and ejb files -->
+      <echo message="calling ${book.path}/rental/ejb/build.xml" />
+      <ant antfile="${book.path}/rental/ejb/build.xml" target="rental" />
+      <echo message="returned from ${book.path}/rental/ejb/build.xml" />
+
+      <antcall target="intellibo-enhance" >
+         <param name="package" value="rental/persistent" />
+         <param name="jdoname" value="persistent" />
+         <param name="subpackage"   value="ejb" />
+      </antcall>
+      <echo message="returned from intellibo-enhance" />
+
+      <!-- build Intellibo's RAR file -->
+      <antcall target="build-rar" >
+         <param name="rar-config" value="rental/ejb/intellibo" />
+      </antcall>
+      <echo message="returned from build-rar" />
+
+      <!-- build the EJB jar file -->
+      <echo message="calling ants/jboss.xml" />
+      <ant antfile="bookants/jboss.xml" target="rental-ejb" />
+      <echo message="returned from ants/jboss.xml" />
+
+      <!-- build the servlet -->
+      <echo message="calling ${book.path}/rental/ejb/build.xml" />
+      <ant antfile="${book.path}/rental/ejb/build.xml" target="rental-servlet" />
+      <echo message="returned from ${book.path}/rental/ejb/build.xml" />
+
+      <!-- copy the files that the servlet client needs to talk to EJB in JBoss -->
+      <echo message="calling bookants/jboss.xml" />
+      <ant antfile="bookants/jboss.xml" target="rental-ejb-copy-files" />
+      <echo message="returned from bookants/jboss.xml" />
+
+      <ant antfile="bookants/tomcat.xml" target="rental-servlet-ejb" >
+         <property name="servlet-design" value="ejb" />
+      </ant>
+   </target>
+</project>
+

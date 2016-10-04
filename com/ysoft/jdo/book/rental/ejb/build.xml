@@ -1,0 +1,163 @@
+<project name="JDO Book Examples Ant Script for rental.ejb package" default="Help" basedir=".">
+
+   <target name="Help" >
+      <echo message="This build file is not called directly" />
+   </target>
+
+   <target name="all-variables-defined" >
+      <condition property="rental-ready" >
+         <not><or>
+            <equals arg1="${source.dir}"        arg2="$${source.dir}" />
+            <equals arg1="${build.dir}"         arg2="$${build.dir}" />
+            <equals arg1="${compile.classpath}" arg2="$${compile.classpath}" />
+            <equals arg1="${book.path}"         arg2="$${book.path}" />
+         </or></not>
+      </condition>
+   </target>
+
+   <target name="verify" depends="all-variables-defined" unless="rental-ready" >
+      <echo message="A build variable is not defined" />
+      <echo message="   Check ${source.dir}, ${build.dir}" />
+      <echo message="   Check ${book.path}" />
+      <echo message="   Check ${compile.classpath}" />
+      <fail message="A build variable is not defined" />
+   </target>
+
+   <!-- compile the files needed to build the ejb -->
+   <target name="rental" depends="verify" >
+      <!-- do copy first so that javac can detect matching class files -->
+      <copy todir="${book.path}/rental/persistent" preservelastmodified="yes" >
+         <fileset dir="${book.path}/rental/persistent/servlet" >
+            <patternset >
+               <include name="*.java" />
+               <exclude name="Lighthouse.java" />
+            </patternset>
+         </fileset>
+         <fileset dir="${book.path}/rental/persistent/ejb" >
+            <patternset >
+               <include name="*.java" />
+            </patternset>
+         </fileset>
+      </copy>
+
+      <!-- to prevent problems with multiple versions always compile and enhance these files -->
+      <delete failonerror="no">
+         <fileset dir="${build.dir}/${book.path}/rental/persistent" includes="*.class"/>
+      </delete> 
+
+      <javac
+         srcdir="${source.dir}"
+         destdir="${build.dir}"
+         debug="on"
+         deprecation="on"
+         optimize="off"
+      >
+         <classpath path="${compile.classpath}" />
+         <include name="${book.path}/rental/persistent/*.java" />
+         <include name="${book.path}/rental/service/*.java" />
+         <include name="${book.path}/rental/ejb/service/*.java" />
+         <include name="${book.path}/rental/ejb/service/impl/*.java" />
+      </javac>
+
+      <!-- now rename the source file in the temp location so user will not edit -->
+      <move todir="${book.path}/rental/persistent" >
+         <fileset dir="${book.path}/rental/persistent" >
+            <include name="*.java"/>
+         </fileset>
+         <mapper type="glob" from="*.java" to="*.tmp"/>
+      </move>
+   </target>
+
+   <target name="rental-ejb" depends="verify" >
+      <delete >
+         <fileset dir="${source.dir}" >
+            <patternset >
+               <include name="serverjars/reservationservice.jar" />
+               <include name="clientjars/reservationclient.jar" />
+            </patternset>
+         </fileset>
+      </delete>
+
+      <!-- replace the document URI, before putting JDO metadata into server jar -->
+      <available property="jdoxml2" value="${book.path}/rental/persistent/persistent.jdo"
+            file="${enhanced.dir}/${book.path}/rental/persistent/persistent.jdo" />
+      <available property="jdoxml2" value="${book.path}/rental/persistent.jdo"
+            file="${enhanced.dir}/${book.path}/rental/persistent.jdo" />
+      <available property="jdoxml2" value="metadata.jdo" file="${enhanced.dir}/metadata.jdo" />
+      <replace file="${enhanced.dir}/${jdoxml2}" token='"jdo.dtd"' value='"file:/${jboss.home}/jdo.dtd"' />
+      <copy file="resources/jdo.dtd" todir="${jboss.home}"/>
+
+      <jar jarfile="serverjars/reservationservice.jar" update="yes" >
+         <metainf dir="${book.path}/rental/ejb/service/impl" >
+            <patternset >
+               <include name="ejb-jar.xml" />
+            </patternset>
+         </metainf>
+         <fileset dir="${build.dir}" >
+            <patternset >
+               <include name="${book.path}/rental/ejb/service/*.class" />
+               <include name="${book.path}/rental/ejb/service/impl/*.class" />
+               <include name="${book.path}/rental/service/*.class" />
+               <include name="${book.path}/rental/service/factory.properties" />
+               <include name="${book.path}/common/*.class" />
+               <exclude name="${book.path}/common/ServletLogger.class" />
+               <include name="${book.path}/common/ejb/*.class" />
+               <include name="${book.path}/common/exceptions/*.class" />
+               <include name="${book.path}/factory/Jndi*.class" />
+               <include name="${book.path}/factory/JDOFactory*.class" />
+            </patternset>
+         </fileset>
+         <fileset dir="${enhanced.dir}" >
+            <patternset >
+               <include name="${book.path}/rental/persistent/*.class" />
+               <include name="${jdoxml2}" />
+            </patternset>
+         </fileset>
+         <fileset dir="${source.dir}" >
+            <patternset >
+               <include name="${book.path}/common/package.properties" />
+            </patternset>
+         </fileset>
+      </jar>
+
+      <jar jarfile="clientjars/reservationclient.jar" update="yes">
+         <fileset dir="${build.dir}" >
+            <patternset >
+               <include name="${book.path}/rental/ejb/service/*.class" />
+               <include name="${book.path}/rental/service/*.class" />
+               <include name="${book.path}/common/*.class" />
+               <include name="${book.path}/common/exceptions/*.class" />
+               <include name="${book.path}/factory/JDOFactory*.class" />
+            </patternset>
+         </fileset>
+         <fileset dir="${enhanced.dir}" >
+            <patternset >
+               <!-- Note that client is using enhanced application data class files -->
+               <include name="${book.path}/rental/persistent/*.class" />
+            </patternset>
+         </fileset>
+         <fileset dir="resources" >
+            <patternset >
+               <include name="jndi.properties" />
+            </patternset>
+         </fileset>
+      </jar>
+   </target>
+
+   <!-- compile the files needed to build the servlet -->
+   <target name="rental-servlet" depends="verify" >
+      <javac
+         srcdir="${source.dir}"
+         destdir="${build.dir}"
+         debug="on"
+         deprecation="on"
+         optimize="off"
+      >
+         <classpath path="${compile.classpath}" />
+         <include name="${book.path}/rental/servlet/ejb/*.java" />
+         <include name="${book.path}/rental/servlet/util/*.java" />
+      </javac>
+   </target>
+
+</project>
+
